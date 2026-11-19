@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AppForge AI - APK & App Maker</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #131a2a;
+      --border: #232e47;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --gold: #f59e0b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 85px; }
+    .header { background: linear-gradient(135deg, #1e1b4b, #0f172a); padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; }
+    .logo { font-size: 19px; font-weight: 800; letter-spacing: 0.4px; }
+    .logo span { color: #818cf8; }
+    .badge { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 20px; background: rgba(245, 158, 11, 0.15); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.4); cursor: pointer; }
+    .badge.pro { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.4); }
+    .container { max-width: 520px; margin: 0 auto; padding: 16px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: var(--card); padding: 6px; border-radius: 12px; border: 1px solid var(--border); }
+    .tab { flex: 1; text-align: center; padding: 10px 6px; font-size: 13px; font-weight: 600; border-radius: 8px; color: var(--muted); cursor: pointer; }
+    .tab.active { background: var(--primary); color: #fff; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .card h2 { font-size: 16px; margin-bottom: 12px; color: #e2e8f0; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
+    input, select { width: 100%; background: #090d16; border: 1px solid var(--border); color: var(--text); padding: 11px 12px; border-radius: 10px; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--primary); }
+    .btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: 0.2s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .ad-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #1e293b; border-top: 1px solid #334155; padding: 10px; text-align: center; font-size: 12px; color: #cbd5e1; z-index: 60; }
+    .ad-tag { background: #475569; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-right: 6px; }
+    .hidden { display: none !important; }
+    .status-box { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 13px; line-height: 1.5; background: #090d16; border: 1px solid var(--border); }
+    .pro-list { list-style: none; margin: 12px 0; font-size: 14px; line-height: 1.9; color: #cbd5e1; }
+  </style>
+</head> <body>
+  <div class="header">
+    <div class="logo">AppForge <span>AI</span></div>
+    <div id="planBadge" class="badge" onclick="switchTab('pro')">FREE PLAN • Go Pro</div>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <div id="tab-build" class="tab active" onclick="switchTab('build')">🔨 App Builder</div>
+      <div id="tab-pro" class="tab" onclick="switchTab('pro')">👑 Pro (₹499)</div>
+      <div id="tab-server" class="tab" onclick="switchTab('server')">⚙️ Server</div>
+    </div>
+
+    <!-- BUILD TAB -->
+    <div id="view-build">
+      <div class="card">
+        <h2>नया Android App बनाएं</h2>
+        <div class="form-group">
+          <label>ऐप का नाम (App Name)</label>
+          <input type="text" id="appName" placeholder="जैसे: My Business App" />
+        </div>
+        <div class="form-group">
+          <label>पैकेज आईडी (Package ID)</label>
+          <input type="text" id="pkgName" placeholder="जैसे: com.akash.myapp" />
+        </div>
+        <div class="form-group">
+          <label>वेबसाइट URL या ऐप लिंक</label>
+          <input type="url" id="appUrl" placeholder="https://example.com" />
+        </div>
+        <div class="form-group">
+          <label>आउटपुट फॉर्मेट चुनें</label>
+          <select id="buildType">
+            <option value="apk">Android APK (सीधे फोन में इंस्टॉल के लिए)</option>
+            <option value="aab">Play Store AAB Bundle (Pro फीचर)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="startBuild()">🚀 Build APK / AAB Now</button>
+        <div id="buildStatus" class="status-box hidden"></div>
+      </div>
+    </div>
+
+    <!-- PRO TAB -->
+    <div id="view-pro" class="hidden">
+      <div class="card">
+        <h2>👑 AppForge AI Pro (Lifetime)</h2>
+        <p style="font-size:13px; color:#94a3b8;">एक बार पेमेंट करें और हमेशा के लिए विज्ञापन-मुक्त (Ad-Free) प्रोफेशनल ऐप बिल्डर अनलॉक करें।</p>
+        <ul class="pro-list">
+          <li>✅ <strong>100% विज्ञापन-मुक्त (No Ads)</strong> अनुभव</li>
+          <li>✅ Play Store के लिए <strong>.AAB फाइल</strong> एक्सपोर्ट</li>
+          <li>✅ अनलिमिटेड Cloud APK बिल्ड्स</li>
+          <li>✅ तेज़ प्रायोरिटी सर्वर प्रोसेसिंग</li>
+        </ul>
+        <button id="buyProBtn" class="btn btn-gold" onclick="unlockPro()">₹499 में Pro अनलॉक करें</button>
+        <div id="proStatus" class="status-box hidden"></div>
+      </div>
+    </div>
+
+    <!-- SERVER TAB -->
+    <div id="view-server" class="hidden">
+      <div class="card">
+        <h2>⚙️ GitHub Cloud Builder सेटअप</h2>
+        <div class="form-group">
+          <label>GitHub Username</label>
+          <input type="text" id="ghUser" value="akashsarkar97483-pixel" />
+        </div>
+        <div class="form-group">
+          <label>Repository Name</label>
+          <input type="text" id="ghRepo" value="appforge-cloud-builder" />
+        </div>
+        <div class="form-group">
+          <label>GitHub API Token (ghp_...)</label>
+          <input type="password" id="ghToken" placeholder="अपना ghp_... टोकन यहाँ पेस्ट करें" />
+        </div>
+        <button class="btn btn-outline" onclick="saveServerConfig()">💾 सर्वर सेटिंग सेव करें</button>
+        <div id="serverStatus" class="status-box hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="adBanner" class="ad-banner">
+    <span class="ad-tag">Ad</span> AppForge Free Version • <u style="cursor:pointer;color:#fbbf24;" onclick="switchTab('pro')">विज्ञापन हटाने के लिए ₹499 में Pro लें</u>
+  </div>
+  <script>
+    let isPro = localStorage.getItem('appforge_pro') === 'true';
+
+    window.onload = function() {
+      if (localStorage.getItem('gh_user')) document.getElementById('ghUser').value = localStorage.getItem('gh_user');
+      if (localStorage.getItem('gh_repo')) document.getElementById('ghRepo').value = localStorage.getItem('gh_repo');
+      if (localStorage.getItem('gh_token')) document.getElementById('ghToken').value = localStorage.getItem('gh_token');
+      updateProUI();
+    };
+
+    function switchTab(tab) {
+      ['build', 'pro', 'server'].forEach(t => {
+        document.getElementById('tab-' + t).classList.remove('active');
+        document.getElementById('view-' + t).classList.add('hidden');
+      });
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('view-' + tab).classList.remove('hidden');
+    }
+
+    function updateProUI() {
+      const badge = document.getElementById('planBadge');
+      const ad = document.getElementById('adBanner');
+      const btn = document.getElementById('buyProBtn');
+      if (isPro) {
+        badge.textContent = '👑 PRO ACTIVE';
+        badge.classList.add('pro');
+        ad.classList.add('hidden');
+        if (btn) btn.textContent = '✅ Pro प्लान एक्टिव है (Ad-Free)';
+      }
+    }
+
+    function unlockPro() {
+      if (isPro) return;
+      if (confirm('AppForge AI Pro (₹499 Lifetime) अनलॉक करें?\n\nफायदे:\n• 100% विज्ञापन-मुक्त अनुभव\n• Play Store .AAB एक्सपोर्ट\n• अनलिमिटेड बिल्ड्स')) {
+        isPro = true;
+        localStorage.setItem('appforge_pro', 'true');
+        updateProUI();
+        const st = document.getElementById('proStatus');
+        st.classList.remove('hidden');
+        st.innerHTML = '🎉 <strong>बधाई हो!</strong> आपका Pro प्लान एक्टिव हो गया है और सभी विज्ञापन हटा दिए गए हैं।';
+      }
+    }
+
+    function saveServerConfig() {
+      const u = document.getElementById('ghUser').value.trim();
+      const r = document.getElementById('ghRepo').value.trim();
+      const t = document.getElementById('ghToken').value.trim();
+      const st = document.getElementById('serverStatus');
+      st.classList.remove('hidden');
+      if (!u || !r || !t) {
+        st.innerHTML = '⚠️ कृपया Username, Repository और अपना ghp_... टोकन तीनों भरें।';
+        return;
+      }
+      localStorage.setItem('gh_user', u);
+      localStorage.setItem('gh_repo', r);
+      localStorage.setItem('gh_token', t);
+      st.innerHTML = '✅ <strong>सर्वर सेटिंग सुरक्षित हो गई!</strong> अब आप App Builder टैब से सीधे APK/AAB बना सकते हैं।';
+    }
+
+    async function startBuild() {
+      const appName = document.getElementById('appName').value.trim();
+      const pkgName = document.getElementById('pkgName').value.trim();
+      const appUrl = document.getElementById('appUrl').value.trim();
+      const buildType = document.getElementById('buildType').value;
+      const st = document.getElementById('buildStatus');
+      st.classList.remove('hidden');
+
+      if (!appName || !pkgName || !appUrl) {
+        st.innerHTML = '⚠️ कृपया ऐप का नाम, पैकेज आईडी और वेबसाइट URL तीनों भरें।';
+        return;
+      }
+      if (buildType === 'aab' && !isPro) {
+        st.innerHTML = '👑 <strong>Play Store (.AAB)</strong> केवल Pro यूज़र्स के लिए है। कृपया पहले ₹499 में Pro अनलॉक करें या APK चुनें।';
+        return;
+      }
+
+      const u = localStorage.getItem('gh_user');
+      const r = localStorage.getItem('gh_repo');
+      const t = localStorage.getItem('gh_token');
+
+      if (!u || !r || !t) {
+        st.innerHTML = '⚙️ पहले ऊपर <strong>Server</strong> टैब में जाकर अपना GitHub API Token सेव करें।';
+        return;
+      }
+
+      st.innerHTML = '⏳ <strong>Cloud Builder से जुड़ रहे हैं...</strong> कृपया प्रतीक्षा करें।';
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${u}/${r}/actions/workflows/build_android.yml/dispatches`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + t,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              app_name: appName,
+              package_id: pkgName,
+              app_url: appUrl,
+              build_format: buildType
+            }
+          })
+        });
+
+        if (res.status === 204) {
+          st.innerHTML = `🚀 <strong>बिल्ड शुरू हो गया है!</strong><br>ऐप: <b>${appName}</b> (${buildType.toUpperCase()})<br>2-3 मिनट में आपकी फाइल GitHub Actions में तैयार हो जाएगी।`;
+        } else {
+          const err = await res.json();
+          st.innerHTML = `❌ सर्वर त्रुटि (${res.status}): ${err.message || 'कृपया अपना Token और Workflow नाम जांचें।'}`;
+        }
+      } catch (e) {
+        st.innerHTML = '❌ नेटवर्क या कनेक्शन त्रुटि: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
