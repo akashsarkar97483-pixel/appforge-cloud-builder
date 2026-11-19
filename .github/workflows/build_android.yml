@@ -24,12 +24,55 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Prepare App Configuration
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create Capacitor Android App
         run: |
-          echo "Building App: ${{ github.event.inputs.app_name }}"
-          echo "Package ID: ${{ github.event.inputs.package_id }}"
-          echo "Target URL: ${{ github.event.inputs.app_url }}"
-          echo "Format: ${{ github.event.inputs.build_format }}"
+          mkdir app && cd app
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          mkdir www
+          echo "<html><body><h3>Loading...</h3></body></html>" > www/index.html
+          npx cap init "${{ github.event.inputs.app_name }}" "${{ github.event.inputs.package_id }}" --web-dir www
+          node -e '
+            const fs = require("fs");
+            const cfg = {
+              appId: process.env.PKG_ID,
+              appName: process.env.APP_NAME,
+              webDir: "www",
+              server: { url: process.env.APP_URL, cleartext: true }
+            };
+            fs.writeFileSync("capacitor.config.json", JSON.stringify(cfg, null, 2));
+          '
+          npx cap add android
+        env:
+          APP_NAME: ${{ github.event.inputs.app_name }}
+          PKG_ID: ${{ github.event.inputs.package_id }}
+          APP_URL: ${{ github.event.inputs.app_url }}
+
+      - name: Build Android APK or AAB
+        run: |
+          cd app/android
+          chmod +x gradlew
+          if [ "${{ github.event.inputs.build_format }}" = "aab" ]; then
+            ./gradlew bundleRelease
+          else
+            ./gradlew assembleDebug
+          fi
+
+      - name: Upload Generated App File
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.inputs.app_name }}-build
+          path: |
+            app/android/app/build/outputs/apk/debug/*.apk
+            app/android/app/build/outputs/bundle/release/*.aab
