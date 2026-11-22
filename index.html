@@ -30,7 +30,6 @@
       overflow: hidden;
     }
 
-    /* Header */
     header {
       background: var(--bg-panel);
       padding: 8px 12px;
@@ -61,11 +60,9 @@
     }
     .lang-select { max-width: 90px; }
 
-    /* Screens */
     .screen { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
     .screen.active { display: flex; }
 
-    /* Home Dashboard */
     .home-container { padding: 14px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; flex: 1; padding-bottom: 30px; }
     .hero-card {
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -108,7 +105,6 @@
     .proj-info { flex: 1; cursor: pointer; }
     .del-btn { background: rgba(239,68,68,0.15); color: #f87171; border: none; padding: 6px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
 
-    /* Workspace Tabs */
     .workspace-tabs {
       display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
@@ -159,9 +155,8 @@
 
     #previewFrame { flex: 1; width: 100%; border: none; background: #ffffff; }
 
-    /* Fixed Bottom AI Bar */
     .ai-status {
-      background: #1e1b4b; color: #c7d2fe; font-size: 12px; padding: 5px 12px;
+      background: #1e1b4b; color: #fde047; font-size: 12px; padding: 6px 12px;
       display: none; align-items: center; justify-content: space-between; flex-shrink: 0;
     }
     .ai-bar {
@@ -183,7 +178,6 @@
       border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; flex-shrink: 0;
     }
 
-    /* Modals */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82);
       justify-content: center; align-items: center; padding: 16px; z-index: 999;
@@ -207,7 +201,6 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <div class="logo">⚡ AppMaker <span>AI</span></div>
     <div class="header-actions">
@@ -239,7 +232,6 @@
     </div>
   </header>
 
-  <!-- SCREEN 1: HOME DASHBOARD -->
   <div id="homeScreen" class="screen active">
     <div class="home-container">
       <div class="hero-card">
@@ -295,7 +287,6 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: WORKSPACE -->
   <div id="workspaceScreen" class="screen">
     <div class="workspace-tabs">
       <button class="tab-btn active" id="tab-design" onclick="switchTab('design')">🎨 Design</button>
@@ -351,7 +342,6 @@
       <span id="aiStatusText">🎙️ Listening... Speak now</span>
     </div>
 
-    <!-- Always-Visible Bottom AI Bar -->
     <div class="ai-bar">
       <button class="mic-btn" id="micBtn" onclick="startVoiceRecognition()">🎙️</button>
       <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: 'Make a Snake game'..." />
@@ -359,7 +349,6 @@
     </div>
   </div>
 
-  <!-- MODAL 1: Coins & Earn Rewards -->
   <div class="modal" id="coinModal">
     <div class="modal-box">
       <h3>🪙 AI Builder Coins</h3>
@@ -387,7 +376,6 @@
     </div>
   </div>
 
-  <!-- MODAL 2: Optional Custom API Key -->
   <div class="modal" id="apiModal">
     <div class="modal-box">
       <h3>🔑 Custom Gemini API Key</h3>
@@ -400,7 +388,6 @@
     </div>
   </div>
 
-  <!-- MODAL 3: Export & Download Studio -->
   <div class="modal" id="exportModal">
     <div class="modal-box">
       <h3>📦 Export & Download App</h3>
@@ -539,7 +526,6 @@
     }
 
     function watchAdForCoins() {
-      // AdMob Rewarded Ad Hook (Android WebView Interface)
       if (window.AndroidAds && window.AndroidAds.showRewardedAd) {
         window.AndroidAds.showRewardedAd();
       }
@@ -933,12 +919,14 @@
           statusText.innerText = '✅ App built successfully!';
           setTimeout(() => { statusBox.style.display = 'none'; }, 2500);
           return;
+        } else if (data.error) {
+          throw new Error(data.error.message || JSON.stringify(data.error));
         } else {
-          throw new Error('AI response empty');
+          throw new Error('Empty response from server');
         }
       } catch (err) {
-        statusText.innerText = '⚠️ Server busy, try again.';
-        setTimeout(() => { statusBox.style.display = 'none'; }, 2500);
+        statusText.innerText = '⚠️ ' + err.message;
+        setTimeout(() => { statusBox.style.display = 'none'; }, 6000);
       }
     }
   </script>
