@@ -1,19 +1,19 @@
 {
-  "id": "/appforge-cloud-builder/",
-  "name": "AppMaker AI - Voice App Builder",
+  "id": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
+  "name": "AppMaker AI",
   "short_name": "AppMaker AI",
   "description": "Create Android and web apps instantly using voice or text commands with AI.",
-  "start_url": "/appforge-cloud-builder/",
-  "scope": "/appforge-cloud-builder/",
+  "start_url": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
+  "scope": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#4f46e5",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%234f46e5'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='260'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E",
+      "src": "https://raw.githubusercontent.com/github/explore/main/topics/android/android.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
