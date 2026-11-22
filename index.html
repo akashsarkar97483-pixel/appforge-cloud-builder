@@ -21,7 +21,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-    /* Header */
     header {
       background: var(--bg-panel);
       padding: 10px 14px;
@@ -40,11 +39,9 @@
     }
     .lang-select { max-width: 105px; }
 
-    /* Screens */
     .screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; }
     .screen.active { display: flex; }
 
-    /* Home Dashboard */
     .home-container { padding: 16px; display: flex; flex-direction: column; gap: 16px; padding-bottom: 30px; }
     .hero-card {
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -74,7 +71,6 @@
       border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
     }
 
-    /* Templates Horizontal Scroll */
     .templates-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
     .template-card {
       min-width: 135px; background: var(--bg-card); border: 1px solid var(--border);
@@ -82,7 +78,6 @@
     }
     .template-card:active { border-color: var(--accent); }
 
-    /* Saved Projects List */
     .project-list { display: flex; flex-direction: column; gap: 8px; }
     .project-item {
       background: var(--bg-card); border: 1px solid var(--border); padding: 12px 14px;
@@ -92,7 +87,6 @@
     .proj-actions { display: flex; gap: 8px; align-items: center; }
     .del-btn { background: rgba(239,68,68,0.15); color: #f87171; border: none; padding: 6px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
 
-    /* Workspace Tabs */
     .workspace-tabs {
       display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border);
     }
@@ -105,7 +99,6 @@
     .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
     .tab-content.active { display: flex; }
 
-    /* Visual Builder */
     .widget-palette {
       display: flex; gap: 8px; padding: 10px; background: var(--bg-card); overflow-x: auto; border-bottom: 1px solid var(--border);
     }
@@ -114,27 +107,36 @@
       padding: 6px 12px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer;
     }
     .canvas-area {
-      flex: 1; padding: 14px; background: #0b1120; overflow-y: auto; display: flex; flex-direction: column;
+      flex: 1; padding: 12px; background: #0b1120; overflow-y: auto; display: flex; flex-direction: column; position: relative;
     }
     #visualFrame { flex: 1; width: 100%; border: 2px dashed var(--border); border-radius: 12px; background: #ffffff; }
 
-    /* Code Editor */
+    .prop-panel {
+      display: none; background: var(--bg-card); border-top: 2px solid var(--primary);
+      padding: 12px; gap: 8px; flex-direction: column;
+    }
+    .prop-panel.active { display: flex; }
+    .prop-row { display: flex; gap: 8px; align-items: center; }
+    .prop-input {
+      flex: 1; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
+      padding: 7px 10px; border-radius: 6px; font-size: 12px;
+    }
+    .color-picker { width: 38px; height: 32px; border: none; background: none; cursor: pointer; }
+
     .code-toolbar {
       display: flex; gap: 6px; padding: 8px; background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto;
     }
     .key-btn {
       background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border);
-      padding: 6px 11px; border-radius: 6px; font-family: monospace; font-size: 13px; cursor: pointer; white-space: nowrap;
+      padding: 6px 11px; border-radius: 6px; font-family: monospace; font-size: 12px; cursor: pointer; white-space: nowrap;
     }
     #codeArea {
       flex: 1; width: 100%; background: #090d16; color: #38bdf8; border: none; padding: 14px;
       font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; resize: none; outline: none;
     }
 
-    /* Live Preview */
     #previewFrame { flex: 1; width: 100%; border: none; background: #ffffff; }
 
-    /* Bottom AI Bar */
     .ai-status {
       background: #1e1b4b; color: #c7d2fe; font-size: 12px; padding: 6px 14px;
       display: none; align-items: center; justify-content: space-between;
@@ -162,7 +164,6 @@
       border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; flex-shrink: 0;
     }
 
-    /* Modals (API Key & Export Studio) */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
       justify-content: center; align-items: center; padding: 16px; z-index: 999;
@@ -182,12 +183,10 @@
       background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
       padding: 12px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 12px;
     }
-    .export-option-btn:hover { border-color: var(--primary); }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <div class="logo">⚡ AppMaker <span>AI</span></div>
     <div class="header-actions">
@@ -213,13 +212,12 @@
         <option value="ja-JP">🇯🇵 日本語</option>
         <option value="ko-KR">🇰🇷 한국어</option>
       </select>
-      <button class="header-btn" onclick="openApiModal()">🔑 AI</button>
+      <button class="header-btn" onclick="openApiModal()" title="Optional Custom API">🔑</button>
       <button class="header-btn" id="homeNavBtn" onclick="goHome()" style="display:none;">🏠</button>
       <button class="header-btn" onclick="openExportModal()">📦 Export</button>
     </div>
   </header>
 
-  <!-- SCREEN 1: HOME DASHBOARD -->
   <div id="homeScreen" class="screen active">
     <div class="home-container">
       <div class="hero-card">
@@ -232,7 +230,7 @@
         <div class="mode-card" onclick="createNewProject(false, 'design')">
           <div class="mode-icon">🎨</div>
           <div class="mode-title" id="txtVisualTitle">Visual Builder</div>
-          <div class="mode-desc" id="txtVisualDesc">FlutterFlow-style drag & tap canvas</div>
+          <div class="mode-desc" id="txtVisualDesc">Tap any element to edit color & text</div>
         </div>
         <div class="mode-card" onclick="createNewProject(false, 'code')">
           <div class="mode-icon">💻</div>
@@ -241,7 +239,6 @@
         </div>
       </div>
 
-      <!-- Ready Templates -->
       <div class="section-header">
         <span class="section-title">⚡ Ready Templates (1-Click)</span>
       </div>
@@ -268,7 +265,6 @@
         </div>
       </div>
 
-      <!-- Saved Projects -->
       <div class="section-header">
         <span class="section-title" id="txtProjectsTitle">My Saved Apps</span>
         <button class="btn-new-proj" onclick="createNewProject(false, 'design')">+ New App</button>
@@ -277,7 +273,6 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: WORKSPACE -->
   <div id="workspaceScreen" class="screen">
     <div class="workspace-tabs">
       <button class="tab-btn active" id="tab-design" onclick="switchTab('design')">🎨 Design</button>
@@ -285,7 +280,6 @@
       <button class="tab-btn" id="tab-preview" onclick="switchTab('preview')">▶️ Preview</button>
     </div>
 
-    <!-- Tab 1: Visual Builder -->
     <div id="panel-design" class="tab-content active">
       <div class="widget-palette">
         <button class="widget-chip" onclick="addElement('heading')">+ Heading</button>
@@ -297,16 +291,32 @@
       <div class="canvas-area">
         <iframe id="visualFrame"></iframe>
       </div>
+
+      <div class="prop-panel" id="propPanel">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:12px; color:#a5b4fc;">🎨 Edit Selected Element</strong>
+          <div style="display:flex; gap:6px;">
+            <button class="del-btn" onclick="deleteSelectedElement()">🗑️ Remove</button>
+            <button class="header-btn" style="padding:3px 8px;" onclick="closePropPanel()">✕</button>
+          </div>
+        </div>
+        <div class="prop-row">
+          <input type="text" id="propText" class="prop-input" placeholder="Element text..." oninput="updateSelectedElement()" />
+          <label style="font-size:11px; color:var(--text-muted);">BG:</label>
+          <input type="color" id="propBgColor" class="color-picker" value="#4f46e5" oninput="updateSelectedElement()" />
+          <label style="font-size:11px; color:var(--text-muted);">Text:</label>
+          <input type="color" id="propTextColor" class="color-picker" value="#ffffff" oninput="updateSelectedElement()" />
+        </div>
+      </div>
     </div>
 
-    <!-- Tab 2: Code Editor -->
     <div id="panel-code" class="tab-content">
       <div class="code-toolbar">
+        <button class="key-btn" onclick="undoCode()">↩️ Undo</button>
+        <button class="key-btn" style="background:#312e81; border-color:#6366f1;" onclick="fixCodeWithAI()">✨ AI Fix</button>
         <button class="key-btn" onclick="insertSymbol('<')">&lt;</button>
         <button class="key-btn" onclick="insertSymbol('>')">&gt;</button>
         <button class="key-btn" onclick="insertSymbol('/')">/</button>
-        <button class="key-btn" onclick="insertSymbol('=')">=</button>
-        <button class="key-btn" onclick="insertSymbol('&quot;')">"</button>
         <button class="key-btn" onclick="insertSymbol('{')">{</button>
         <button class="key-btn" onclick="insertSymbol('}')">}</button>
         <button class="key-btn" onclick="copyCode()">📋 Copy</button>
@@ -314,38 +324,33 @@
       <textarea id="codeArea" spellcheck="false" oninput="onCodeChange()"></textarea>
     </div>
 
-    <!-- Tab 3: Live Preview -->
     <div id="panel-preview" class="tab-content">
       <iframe id="previewFrame"></iframe>
     </div>
 
-    <!-- AI Status Bar -->
     <div class="ai-status" id="aiStatus">
       <span id="aiStatusText">🎙️ Listening... Speak now</span>
     </div>
 
-    <!-- Bottom AI Bar -->
     <div class="ai-bar">
       <button class="mic-btn" id="micBtn" onclick="startVoiceRecognition()">🎙️</button>
-      <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: e.g. 'Make a calculator'..." />
+      <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: e.g. 'Make a Snake game'..." />
       <button class="send-btn" id="btnBuild" onclick="processAICommand()">Build</button>
     </div>
   </div>
 
-  <!-- MODAL 1: Gemini API Key -->
   <div class="modal" id="apiModal">
     <div class="modal-box">
-      <h3>🔑 Connect Real Gemini AI</h3>
-      <p style="font-size:12px; color:var(--text-muted);">Paste your free Google Gemini API Key to generate unlimited apps by voice.</p>
+      <h3>🔑 Custom Gemini API Key (Optional)</h3>
+      <p style="font-size:12px; color:var(--text-muted);">Built-in Cloud AI is already active! Only paste a key here if you want to use your own private quota.</p>
       <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." />
       <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="header-btn" onclick="closeModal('apiModal')">Cancel</button>
+        <button class="header-btn" onclick="closeModal('apiModal')">Close</button>
         <button class="send-btn" onclick="saveApiKey()">Save Key</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: Export & Download Studio -->
   <div class="modal" id="exportModal">
     <div class="modal-box">
       <h3>📦 Export & Download App</h3>
@@ -366,7 +371,7 @@
         <span style="font-size:24px;">🤖</span>
         <div>
           <strong>Download Android APK / AAB Package</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Ready package with manifest for Cloud APK Build</div>
+          <div style="font-size:11px; color:var(--text-muted);">Ready source package for Cloud APK Build</div>
         </div>
       </button>
 
@@ -377,9 +382,13 @@
   </div>
 
   <script>
+    const CLOUDFLARE_WORKER_URL = "https://raftaar-ai-server.akashsarkar97483.workers.dev";
+
     let currentLang = 'en-US';
     let projects = [];
     let activeProjectId = null;
+    let codeHistory = [];
+    let selectedElementRef = null;
 
     const defaultTemplateCode = `<!DOCTYPE html>
 <html lang="en">
@@ -393,7 +402,7 @@
 </head>
 <body>
   <h1>Hello! My New App</h1>
-  <p>Tap the mic below and speak to build your app.</p>
+  <p>Tap any item in Design mode to edit color & text, or use the mic below.</p>
   <button onclick="alert('Your app is working great!')">Click Me</button>
 </body>
 </html>`;
@@ -411,11 +420,11 @@
         heroDesc: 'Just speak in your language — AI will automatically write the code and build your app.',
         voiceStart: '🎙️ Start Speaking',
         visualTitle: 'Visual Builder',
-        visualDesc: 'FlutterFlow-style drag & tap canvas',
+        visualDesc: 'Tap any element to edit color & text',
         codeTitle: 'Code Editor',
         codeDesc: 'QuickEdit-style fast code editor',
         projectsTitle: 'My Saved Apps',
-        placeholder: "Speak or type: e.g. 'Make a calculator'...",
+        placeholder: "Speak or type: e.g. 'Make a Snake game'...",
         buildBtn: 'Build',
         listening: '🎙️ Listening... Speak now'
       },
@@ -424,11 +433,11 @@
         heroDesc: 'अपनी भाषा में बोलें — AI अपने आप कोड लिखेगा और ऐप तैयार कर देगा।',
         voiceStart: '🎙️ बोलकर शुरू करें',
         visualTitle: 'विज़ुअल बिल्डर',
-        visualDesc: 'FlutterFlow जैसा आसान डिज़ाइन बोर्ड',
+        visualDesc: 'किसी भी बटन या टेक्स्ट पर टैप करके रंग बदलें',
         codeTitle: 'कोड एडिटर',
         codeDesc: 'QuickEdit जैसा तेज़ कोड एडिटर',
         projectsTitle: 'मेरे सेव किए गए ऐप्स',
-        placeholder: "बोलें या लिखें: जैसे 'कैलकुलेटर बनाओ'...",
+        placeholder: "बोलें या लिखें: जैसे 'सांप वाला गेम बनाओ'...",
         buildBtn: 'बनाएं',
         listening: '🎙️ सुन रहा हूँ... बोलें'
       },
@@ -437,11 +446,11 @@
         heroDesc: 'আপনার ভাষায় বলুন — AI নিজে থেকেই কোড লিখে অ্যাপ তৈরি করে দেবে।',
         voiceStart: '🎙️ কথা বলে শুরু করুন',
         visualTitle: 'ভিজ্যুয়াল বিল্ডার',
-        visualDesc: 'FlutterFlow-এর মতো সহজ ডিজাইন বোর্ড',
+        visualDesc: 'যেকোনো বাটন বা লেখায় ট্যাপ করে রঙ বদলান',
         codeTitle: 'কোড এডিটর',
         codeDesc: 'QuickEdit-এর মতো দ্রুত কোড এডিটর',
         projectsTitle: 'আমার সেভ করা অ্যাপস',
-        placeholder: "বলুন বা লিখুন: যেমন 'ক্যালকুলেটর তৈরি করো'...",
+        placeholder: "বলুন বা লিখুন: যেমন 'স্নেক গেম তৈরি করো'...",
         buildBtn: 'তৈরি করুন',
         listening: '🎙️ শুনছি... বলুন'
       }
@@ -508,6 +517,7 @@
       const proj = projects.find(p => p.id === id);
       if (!proj) return;
       activeProjectId = id;
+      codeHistory = [proj.code];
       document.getElementById('codeArea').value = proj.code;
       document.getElementById('expAppName').value = proj.name;
       switchScreen('workspaceScreen');
@@ -524,18 +534,106 @@
     }
 
     function goHome() {
+      closePropPanel();
       renderProjectList();
       switchScreen('homeScreen');
     }
 
-    function onCodeChange() {
+    function pushHistory(code) {
+      if (codeHistory[codeHistory.length - 1] !== code) {
+        codeHistory.push(code);
+        if (codeHistory.length > 25) codeHistory.shift();
+      }
+    }
+
+    function undoCode() {
+      if (codeHistory.length > 1) {
+        codeHistory.pop();
+        const prev = codeHistory[codeHistory.length - 1];
+        document.getElementById('codeArea').value = prev;
+        onCodeChange(false);
+      } else {
+        alert('Nothing to undo');
+      }
+    }
+
+    function onCodeChange(record = true) {
+      const code = document.getElementById('codeArea').value;
+      if (record) pushHistory(code);
       syncFrames();
       const proj = projects.find(p => p.id === activeProjectId);
       if (proj) {
-        proj.code = document.getElementById('codeArea').value;
+        proj.code = code;
         proj.date = new Date().toLocaleDateString();
         saveProjectsToStorage();
       }
+    }
+
+    function syncFrames() {
+      const code = document.getElementById('codeArea').value;
+      document.getElementById('previewFrame').srcdoc = code;
+
+      const vFrame = document.getElementById('visualFrame');
+      vFrame.srcdoc = code;
+      vFrame.onload = () => {
+        try {
+          const doc = vFrame.contentDocument;
+          doc.body.addEventListener('click', (e) => {
+            if (e.target === doc.body || e.target === doc.documentElement) return;
+            e.preventDefault();
+            e.stopPropagation();
+            selectVisualElement(e.target);
+          });
+        } catch (err) {}
+      };
+    }
+
+    function selectVisualElement(el) {
+      selectedElementRef = el;
+      const panel = document.getElementById('propPanel');
+      panel.classList.add('active');
+      document.getElementById('propText').value = el.innerText || el.placeholder || '';
+    }
+
+    function updateSelectedElement() {
+      if (!selectedElementRef) return;
+      const txt = document.getElementById('propText').value;
+      const bg = document.getElementById('propBgColor').value;
+      const fg = document.getElementById('propTextColor').value;
+
+      if (selectedElementRef.tagName === 'INPUT') {
+        selectedElementRef.placeholder = txt;
+      } else {
+        selectedElementRef.innerText = txt;
+      }
+      selectedElementRef.style.backgroundColor = bg;
+      selectedElementRef.style.color = fg;
+
+      saveVisualFrameToCode();
+    }
+
+    function deleteSelectedElement() {
+      if (!selectedElementRef) return;
+      selectedElementRef.remove();
+      closePropPanel();
+      saveVisualFrameToCode();
+    }
+
+    function saveVisualFrameToCode() {
+      const vFrame = document.getElementById('visualFrame');
+      const updatedHTML = '<!DOCTYPE html>\n' + vFrame.contentDocument.documentElement.outerHTML;
+      document.getElementById('codeArea').value = updatedHTML;
+      document.getElementById('previewFrame').srcdoc = updatedHTML;
+      const proj = projects.find(p => p.id === activeProjectId);
+      if (proj) {
+        proj.code = updatedHTML;
+        saveProjectsToStorage();
+      }
+    }
+
+    function closePropPanel() {
+      selectedElementRef = null;
+      document.getElementById('propPanel').classList.remove('active');
     }
 
     function changeLanguage(langCode) {
@@ -567,7 +665,7 @@
       const key = document.getElementById('geminiApiKeyInput').value.trim();
       localStorage.setItem('gemini_api_key', key);
       closeModal('apiModal');
-      alert('Gemini API Key Saved!');
+      alert('Custom API Key Saved!');
     }
 
     function downloadHTMLFile() {
@@ -590,7 +688,7 @@
       a.href = URL.createObjectURL(blob);
       a.download = pkgName + '_android_source.html';
       a.click();
-      alert('Android Source Package Downloaded! Ready for Cloud APK/AAB Build.');
+      alert('Android Source Package Downloaded!');
     }
 
     function switchScreen(screenId) {
@@ -600,17 +698,12 @@
     }
 
     function switchTab(tabName) {
+      closePropPanel();
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.getElementById('tab-' + tabName).classList.add('active');
       document.getElementById('panel-' + tabName).classList.add('active');
       syncFrames();
-    }
-
-    function syncFrames() {
-      const code = document.getElementById('codeArea').value;
-      document.getElementById('previewFrame').srcdoc = code;
-      document.getElementById('visualFrame').srcdoc = code;
     }
 
     function insertSymbol(sym) {
@@ -635,12 +728,17 @@
       let snippet = '';
       if (type === 'heading') snippet = '\n  <h2>New Heading</h2>';
       if (type === 'text') snippet = '\n  <p>This is a new paragraph text.</p>';
-      if (type === 'button') snippet = '\n  <br><button style="background:#10b981;">New Button</button>';
+      if (type === 'button') snippet = '\n  <br><button style="background:#10b981; color:white; padding:10px 20px; border:none; border-radius:8px; margin:6px;">New Button</button>';
       if (type === 'input') snippet = '\n  <br><input type="text" placeholder="Type here..." style="padding:10px; margin:8px; border-radius:8px; border:1px solid #cbd5e1; width:80%;">';
       if (type === 'card') snippet = '\n  <div style="background:white; padding:16px; margin:12px auto; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1); max-width:300px;"><h3>Card Title</h3><p>Card description goes here.</p></div>';
 
       area.value = area.value.replace('</body>', snippet + '\n</body>');
       onCodeChange();
+    }
+
+    function fixCodeWithAI() {
+      document.getElementById('aiPrompt').value = "Fix any HTML, CSS, or JavaScript bugs in this app and make the UI clean and responsive.";
+      processAICommand();
     }
 
     function startVoiceRecognition() {
@@ -690,16 +788,19 @@
       const rawPrompt = promptInput.value.trim();
       if (!rawPrompt) return;
 
-      const apiKey = localStorage.getItem('gemini_api_key');
+      const userCustomKey = localStorage.getItem('gemini_api_key');
       const area = document.getElementById('codeArea');
       const statusBox = document.getElementById('aiStatus');
       const statusText = document.getElementById('aiStatusText');
 
-      if (apiKey) {
-        statusBox.style.display = 'flex';
-        statusText.innerText = '🤖 AI is building your app...';
-        try {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      statusBox.style.display = 'flex';
+      statusText.innerText = '🤖 AI is building your app...';
+
+      try {
+        let data;
+
+        if (userCustomKey) {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userCustomKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -710,37 +811,36 @@
               }]
             })
           });
-          const data = await response.json();
+          data = await response.json();
+        } else {
+          const response = await fetch(CLOUDFLARE_WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: rawPrompt,
+              currentCode: area.value
+            })
+          });
+          data = await response.json();
+        }
+
+        if (data.candidates && data.candidates[0]) {
           let aiCode = data.candidates[0].content.parts[0].text;
           aiCode = aiCode.replace(/```html/g, '').replace(/```/g, '').trim();
           area.value = aiCode;
           onCodeChange();
           switchTab('preview');
           promptInput.value = '';
-          statusText.innerText = '✅ App updated by AI!';
+          statusText.innerText = '✅ App built successfully!';
           setTimeout(() => { statusBox.style.display = 'none'; }, 2500);
           return;
-        } catch (err) {
-          alert('API Error: Check your Gemini API Key or internet connection.');
-          statusBox.style.display = 'none';
-          return;
+        } else {
+          throw new Error('AI response empty');
         }
+      } catch (err) {
+        statusText.innerText = '⚠️ Server busy, try again.';
+        setTimeout(() => { statusBox.style.display = 'none'; }, 2500);
       }
-
-      const cmd = rawPrompt.toLowerCase();
-      if (cmd.includes('calculator') || cmd.includes('कैलकुलेटर') || cmd.includes('ক্যালকুলেটর')) {
-        area.value = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:#0f172a;color:white;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}.calc{background:#1e293b;padding:20px;border-radius:16px;width:280px}input{width:100%;height:50px;font-size:24px;text-align:right;margin-bottom:12px;border-radius:8px;border:none;padding:0 10px;box-sizing:border-box}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}button{padding:15px;font-size:18px;border:none;border-radius:8px;background:#334155;color:white;cursor:pointer}.eq{background:#6366f1;grid-column:span 2}</style></head><body><div class="calc"><h3 style="text-align:center;margin-top:0">Smart Calculator</h3><input type="text" id="disp" readonly><div class="grid"><button onclick="disp.value=''">C</button><button onclick="disp.value+='/'">/</button><button onclick="disp.value+='*'">*</button><button onclick="disp.value=disp.value.slice(0,-1)">⌫</button><button onclick="disp.value+='7'">7</button><button onclick="disp.value+='8'">8</button><button onclick="disp.value+='9'">9</button><button onclick="disp.value+='-'">-</button><button onclick="disp.value+='4'">4</button><button onclick="disp.value+='5'">5</button><button onclick="disp.value+='6'">6</button><button onclick="disp.value+='+'">+</button><button onclick="disp.value+='1'">1</button><button onclick="disp.value+='2'">2</button><button onclick="disp.value+='3'">3</button><button onclick="disp.value+='0'">0</button><button class="eq" onclick="try{disp.value=eval(disp.value)}catch{disp.value='Error'}">=</button></div></div></body></html>`;
-      } else if (cmd.includes('red button') || cmd.includes('लाल बटन')) {
-        area.value = area.value.replace('</body>', '\n  <br><button style="background:#ef4444; color:white;">Red Button</button>\n</body>');
-      } else if (cmd.includes('login') || cmd.includes('लॉगिन')) {
-        area.value = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:#f1f5f9;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}.box{background:white;padding:24px;border-radius:16px;width:300px;box-shadow:0 4px 12px rgba(0,0,0,0.1);text-align:center}input{width:100%;padding:12px;margin:8px 0;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box}button{width:100%;padding:12px;background:#4f46e5;color:white;border:none;border-radius:8px;font-size:16px;margin-top:8px}</style></head><body><div class="box"><h2>Login</h2><input type="text" placeholder="Email or Phone"><input type="password" placeholder="Password"><button onclick="alert('Login Successful!')">Continue</button></div></body></html>`;
-      } else {
-        area.value = area.value.replace('</body>', `\n  <div style="padding:12px; margin:10px; background:#e0e7ff; color:#1e1b4b; border-radius:8px;">✨ ${rawPrompt}</div>\n</body>`);
-      }
-
-      onCodeChange();
-      switchTab('preview');
-      promptInput.value = '';
     }
   </script>
 </body>
