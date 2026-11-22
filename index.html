@@ -12,6 +12,7 @@
       --primary: #6366f1;
       --primary-glow: rgba(99, 102, 241, 0.35);
       --accent: #10b981;
+      --gold: #f59e0b;
       --danger: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
@@ -19,179 +20,200 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    html, body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      height: 100dvh;
+      max-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
+    /* Header */
     header {
       background: var(--bg-panel);
-      padding: 10px 14px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
-      gap: 6px;
+      gap: 5px;
+      flex-shrink: 0;
     }
-    .logo { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .logo span { background: var(--primary); padding: 2px 7px; border-radius: 6px; font-size: 11px; }
-    .header-actions { display: flex; align-items: center; gap: 6px; }
+    .logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .logo span { background: var(--primary); padding: 2px 6px; border-radius: 6px; font-size: 10px; }
+    .header-actions { display: flex; align-items: center; gap: 5px; }
+    .coin-badge {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--gold);
+      color: #fbbf24;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
     .header-btn, .lang-select {
       background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border);
-      padding: 6px 9px; border-radius: 8px; font-size: 12px; cursor: pointer; outline: none;
+      padding: 5px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; outline: none;
     }
-    .lang-select { max-width: 105px; }
+    .lang-select { max-width: 90px; }
 
-    .screen { display: none; flex: 1; flex-direction: column; overflow-y: auto; }
+    /* Screens */
+    .screen { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
     .screen.active { display: flex; }
 
-    .home-container { padding: 16px; display: flex; flex-direction: column; gap: 16px; padding-bottom: 30px; }
+    /* Home Dashboard */
+    .home-container { padding: 14px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; flex: 1; padding-bottom: 30px; }
     .hero-card {
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px var(--primary-glow);
+      padding: 18px; border-radius: 16px; box-shadow: 0 8px 24px var(--primary-glow);
     }
-    .hero-card h2 { font-size: 20px; margin-bottom: 6px; }
-    .hero-card p { font-size: 13px; opacity: 0.92; margin-bottom: 14px; line-height: 1.4; }
+    .hero-card h2 { font-size: 19px; margin-bottom: 5px; }
+    .hero-card p { font-size: 12px; opacity: 0.92; margin-bottom: 12px; line-height: 1.4; }
     .btn-voice-start {
       background: #fff; color: #1e1b4b; border: none; padding: 10px 16px;
-      border-radius: 10px; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      border-radius: 10px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
     }
 
-    .grid-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .mode-card {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 15px;
-      border-radius: 14px; cursor: pointer; transition: 0.2s;
+      background: var(--bg-card); border: 1px solid var(--border); padding: 14px;
+      border-radius: 14px; cursor: pointer;
     }
-    .mode-card:active { transform: scale(0.97); border-color: var(--primary); }
-    .mode-icon { font-size: 24px; margin-bottom: 6px; }
-    .mode-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .mode-icon { font-size: 22px; margin-bottom: 4px; }
+    .mode-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .mode-desc { font-size: 11px; color: var(--text-muted); }
 
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-    .section-title { font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; }
+    .section-title { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
     .btn-new-proj {
       background: var(--primary); color: #fff; border: none; padding: 5px 10px;
       border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
     }
 
-    .templates-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+    .templates-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; flex-shrink: 0; }
     .template-card {
-      min-width: 135px; background: var(--bg-card); border: 1px solid var(--border);
-      padding: 12px; border-radius: 12px; cursor: pointer; flex-shrink: 0;
+      min-width: 130px; background: var(--bg-card); border: 1px solid var(--border);
+      padding: 11px; border-radius: 12px; cursor: pointer; flex-shrink: 0;
     }
-    .template-card:active { border-color: var(--accent); }
 
     .project-list { display: flex; flex-direction: column; gap: 8px; }
     .project-item {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 12px 14px;
+      background: var(--bg-card); border: 1px solid var(--border); padding: 11px 13px;
       border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
     }
     .proj-info { flex: 1; cursor: pointer; }
-    .proj-actions { display: flex; gap: 8px; align-items: center; }
     .del-btn { background: rgba(239,68,68,0.15); color: #f87171; border: none; padding: 6px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
 
+    /* Workspace Tabs */
     .workspace-tabs {
-      display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border);
+      display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
     .tab-btn {
-      flex: 1; padding: 11px; background: none; border: none; color: var(--text-muted);
+      flex: 1; padding: 9px; background: none; border: none; color: var(--text-muted);
       font-weight: 600; font-size: 13px; border-bottom: 2px solid transparent; cursor: pointer;
     }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.08); }
 
-    .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+    .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
     .tab-content.active { display: flex; }
 
     .widget-palette {
-      display: flex; gap: 8px; padding: 10px; background: var(--bg-card); overflow-x: auto; border-bottom: 1px solid var(--border);
+      display: flex; gap: 6px; padding: 8px; background: var(--bg-card); overflow-x: auto; border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
     .widget-chip {
       background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 6px 12px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer;
+      padding: 5px 10px; border-radius: 20px; font-size: 11px; white-space: nowrap; cursor: pointer;
     }
     .canvas-area {
-      flex: 1; padding: 12px; background: #0b1120; overflow-y: auto; display: flex; flex-direction: column; position: relative;
+      flex: 1; padding: 10px; background: #0b1120; overflow: hidden; display: flex; flex-direction: column; min-height: 0;
     }
-    #visualFrame { flex: 1; width: 100%; border: 2px dashed var(--border); border-radius: 12px; background: #ffffff; }
+    #visualFrame { flex: 1; width: 100%; border: 2px dashed var(--border); border-radius: 10px; background: #ffffff; }
 
     .prop-panel {
       display: none; background: var(--bg-card); border-top: 2px solid var(--primary);
-      padding: 12px; gap: 8px; flex-direction: column;
+      padding: 10px; gap: 6px; flex-direction: column; flex-shrink: 0;
     }
     .prop-panel.active { display: flex; }
-    .prop-row { display: flex; gap: 8px; align-items: center; }
+    .prop-row { display: flex; gap: 6px; align-items: center; }
     .prop-input {
       flex: 1; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 7px 10px; border-radius: 6px; font-size: 12px;
+      padding: 6px 8px; border-radius: 6px; font-size: 12px;
     }
-    .color-picker { width: 38px; height: 32px; border: none; background: none; cursor: pointer; }
+    .color-picker { width: 34px; height: 28px; border: none; background: none; cursor: pointer; }
 
     .code-toolbar {
-      display: flex; gap: 6px; padding: 8px; background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto;
+      display: flex; gap: 6px; padding: 7px; background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0;
     }
     .key-btn {
       background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border);
-      padding: 6px 11px; border-radius: 6px; font-family: monospace; font-size: 12px; cursor: pointer; white-space: nowrap;
+      padding: 5px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; cursor: pointer; white-space: nowrap;
     }
     #codeArea {
-      flex: 1; width: 100%; background: #090d16; color: #38bdf8; border: none; padding: 14px;
+      flex: 1; width: 100%; background: #090d16; color: #38bdf8; border: none; padding: 12px;
       font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; resize: none; outline: none;
     }
 
     #previewFrame { flex: 1; width: 100%; border: none; background: #ffffff; }
 
+    /* Fixed Bottom AI Bar */
     .ai-status {
-      background: #1e1b4b; color: #c7d2fe; font-size: 12px; padding: 6px 14px;
-      display: none; align-items: center; justify-content: space-between;
+      background: #1e1b4b; color: #c7d2fe; font-size: 12px; padding: 5px 12px;
+      display: none; align-items: center; justify-content: space-between; flex-shrink: 0;
     }
     .ai-bar {
-      background: var(--bg-panel); border-top: 1px solid var(--border); padding: 10px 12px;
-      display: flex; gap: 8px; align-items: center;
+      background: var(--bg-panel); border-top: 1px solid var(--border); padding: 8px 10px;
+      display: flex; gap: 8px; align-items: center; flex-shrink: 0;
     }
     .ai-input {
       flex: 1; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main);
-      padding: 10px 14px; border-radius: 24px; font-size: 13px; outline: none;
+      padding: 9px 12px; border-radius: 22px; font-size: 13px; outline: none; min-width: 0;
     }
     .mic-btn {
-      width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: #fff;
+      width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff;
       border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;
-      transition: 0.2s; flex-shrink: 0;
+      flex-shrink: 0;
     }
-    .mic-btn.listening {
-      background: var(--danger);
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.7);
-      transform: scale(1.08);
-    }
+    .mic-btn.listening { background: var(--danger); box-shadow: 0 0 12px rgba(239, 68, 68, 0.7); }
     .send-btn {
-      background: var(--accent); color: #fff; border: none; padding: 10px 14px;
-      border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; flex-shrink: 0;
+      background: var(--accent); color: #fff; border: none; padding: 9px 13px;
+      border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; flex-shrink: 0;
     }
 
+    /* Modals */
     .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82);
       justify-content: center; align-items: center; padding: 16px; z-index: 999;
     }
     .modal.active { display: flex; }
     .modal-box {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 20px;
-      border-radius: 16px; width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 12px;
-      max-height: 90vh; overflow-y: auto;
+      background: var(--bg-card); border: 1px solid var(--border); padding: 18px;
+      border-radius: 16px; width: 100%; max-width: 370px; display: flex; flex-direction: column; gap: 11px;
+      max-height: 90dvh; overflow-y: auto;
     }
-    .modal-box label { font-size: 12px; color: var(--text-muted); margin-bottom: -6px; }
+    .modal-box label { font-size: 12px; color: var(--text-muted); margin-bottom: -5px; }
     .modal-box input {
       background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 10px; border-radius: 8px; font-size: 13px; width: 100%;
+      padding: 9px; border-radius: 8px; font-size: 13px; width: 100%;
     }
     .export-option-btn {
       background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 12px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 12px;
+      padding: 11px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <header>
     <div class="logo">⚡ AppMaker <span>AI</span></div>
     <div class="header-actions">
+      <div class="coin-badge" onclick="openCoinModal()">🪙 <span id="coinCount">20</span></div>
       <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
-        <option value="en-US" selected>🌐 English</option>
+        <option value="en-US" selected>🌐 EN</option>
         <option value="hi-IN">🇮🇳 हिंदी</option>
         <option value="bn-IN">🇮🇳 বাংলা</option>
         <option value="ta-IN">🇮🇳 தமிழ்</option>
@@ -202,22 +224,22 @@
         <option value="ml-IN">🇮🇳 മലയാളം</option>
         <option value="pa-IN">🇮🇳 ਪੰਜਾਬੀ</option>
         <option value="ur-IN">🇵🇰 اردو</option>
-        <option value="es-ES">🇪🇸 Español</option>
-        <option value="fr-FR">🇫🇷 Français</option>
-        <option value="de-DE">🇩🇪 Deutsch</option>
-        <option value="ar-SA">🇸🇦 العربية</option>
-        <option value="ru-RU">🇷🇺 Русский</option>
-        <option value="pt-BR">🇧🇷 Português</option>
-        <option value="id-ID">🇮🇩 Indonesia</option>
-        <option value="ja-JP">🇯🇵 日本語</option>
-        <option value="ko-KR">🇰🇷 한국어</option>
+        <option value="es-ES">🇪🇸 ES</option>
+        <option value="fr-FR">🇫🇷 FR</option>
+        <option value="de-DE">🇩🇪 DE</option>
+        <option value="ar-SA">🇸🇦 AR</option>
+        <option value="ru-RU">🇷🇺 RU</option>
+        <option value="pt-BR">🇧🇷 PT</option>
+        <option value="id-ID">🇮🇩 ID</option>
+        <option value="ja-JP">🇯🇵 JA</option>
+        <option value="ko-KR">🇰🇷 KO</option>
       </select>
-      <button class="header-btn" onclick="openApiModal()" title="Optional Custom API">🔑</button>
       <button class="header-btn" id="homeNavBtn" onclick="goHome()" style="display:none;">🏠</button>
-      <button class="header-btn" onclick="openExportModal()">📦 Export</button>
+      <button class="header-btn" onclick="openExportModal()">📦</button>
     </div>
   </header>
 
+  <!-- SCREEN 1: HOME DASHBOARD -->
   <div id="homeScreen" class="screen active">
     <div class="home-container">
       <div class="hero-card">
@@ -240,26 +262,26 @@
       </div>
 
       <div class="section-header">
-        <span class="section-title">⚡ Ready Templates (1-Click)</span>
+        <span class="section-title">⚡ Ready Templates (Free)</span>
       </div>
       <div class="templates-row">
         <div class="template-card" onclick="loadTemplate('quiz')">
-          <div style="font-size:22px; margin-bottom:4px;">🧠</div>
+          <div style="font-size:20px; margin-bottom:3px;">🧠</div>
           <strong style="font-size:13px;">Quiz Game</strong>
           <div style="font-size:11px; color:var(--text-muted);">Score + Questions</div>
         </div>
         <div class="template-card" onclick="loadTemplate('todo')">
-          <div style="font-size:22px; margin-bottom:4px;">✅</div>
+          <div style="font-size:20px; margin-bottom:3px;">✅</div>
           <strong style="font-size:13px;">Todo List</strong>
           <div style="font-size:11px; color:var(--text-muted);">Daily Task Manager</div>
         </div>
         <div class="template-card" onclick="loadTemplate('expense')">
-          <div style="font-size:22px; margin-bottom:4px;">💰</div>
+          <div style="font-size:20px; margin-bottom:3px;">💰</div>
           <strong style="font-size:13px;">Expense Tracker</strong>
           <div style="font-size:11px; color:var(--text-muted);">Income & Spend</div>
         </div>
         <div class="template-card" onclick="loadTemplate('quotes')">
-          <div style="font-size:22px; margin-bottom:4px;">✨</div>
+          <div style="font-size:20px; margin-bottom:3px;">✨</div>
           <strong style="font-size:13px;">Quotes / Shayari</strong>
           <div style="font-size:11px; color:var(--text-muted);">Copy & Share App</div>
         </div>
@@ -273,6 +295,7 @@
     </div>
   </div>
 
+  <!-- SCREEN 2: WORKSPACE -->
   <div id="workspaceScreen" class="screen">
     <div class="workspace-tabs">
       <button class="tab-btn active" id="tab-design" onclick="switchTab('design')">🎨 Design</button>
@@ -285,7 +308,7 @@
         <button class="widget-chip" onclick="addElement('heading')">+ Heading</button>
         <button class="widget-chip" onclick="addElement('text')">+ Text</button>
         <button class="widget-chip" onclick="addElement('button')">+ Button</button>
-        <button class="widget-chip" onclick="addElement('input')">+ Input Box</button>
+        <button class="widget-chip" onclick="addElement('input')">+ Input</button>
         <button class="widget-chip" onclick="addElement('card')">+ Card</button>
       </div>
       <div class="canvas-area">
@@ -294,17 +317,15 @@
 
       <div class="prop-panel" id="propPanel">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong style="font-size:12px; color:#a5b4fc;">🎨 Edit Selected Element</strong>
+          <strong style="font-size:12px; color:#a5b4fc;">🎨 Edit Element</strong>
           <div style="display:flex; gap:6px;">
             <button class="del-btn" onclick="deleteSelectedElement()">🗑️ Remove</button>
-            <button class="header-btn" style="padding:3px 8px;" onclick="closePropPanel()">✕</button>
+            <button class="header-btn" onclick="closePropPanel()">✕</button>
           </div>
         </div>
         <div class="prop-row">
-          <input type="text" id="propText" class="prop-input" placeholder="Element text..." oninput="updateSelectedElement()" />
-          <label style="font-size:11px; color:var(--text-muted);">BG:</label>
+          <input type="text" id="propText" class="prop-input" placeholder="Text..." oninput="updateSelectedElement()" />
           <input type="color" id="propBgColor" class="color-picker" value="#4f46e5" oninput="updateSelectedElement()" />
-          <label style="font-size:11px; color:var(--text-muted);">Text:</label>
           <input type="color" id="propTextColor" class="color-picker" value="#ffffff" oninput="updateSelectedElement()" />
         </div>
       </div>
@@ -317,8 +338,6 @@
         <button class="key-btn" onclick="insertSymbol('<')">&lt;</button>
         <button class="key-btn" onclick="insertSymbol('>')">&gt;</button>
         <button class="key-btn" onclick="insertSymbol('/')">/</button>
-        <button class="key-btn" onclick="insertSymbol('{')">{</button>
-        <button class="key-btn" onclick="insertSymbol('}')">}</button>
         <button class="key-btn" onclick="copyCode()">📋 Copy</button>
       </div>
       <textarea id="codeArea" spellcheck="false" oninput="onCodeChange()"></textarea>
@@ -332,17 +351,47 @@
       <span id="aiStatusText">🎙️ Listening... Speak now</span>
     </div>
 
+    <!-- Always-Visible Bottom AI Bar -->
     <div class="ai-bar">
       <button class="mic-btn" id="micBtn" onclick="startVoiceRecognition()">🎙️</button>
-      <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: e.g. 'Make a Snake game'..." />
-      <button class="send-btn" id="btnBuild" onclick="processAICommand()">Build</button>
+      <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: 'Make a Snake game'..." />
+      <button class="send-btn" id="btnBuild" onclick="processAICommand()">Build (5🪙)</button>
     </div>
   </div>
 
+  <!-- MODAL 1: Coins & Earn Rewards -->
+  <div class="modal" id="coinModal">
+    <div class="modal-box">
+      <h3>🪙 AI Builder Coins</h3>
+      <p style="font-size:13px; color:var(--text-muted);">Current Balance: <strong style="color:#fbbf24;" id="modalCoinBal">20 Coins</strong><br>Each AI App generation uses <strong>5 Coins</strong>.</p>
+
+      <button class="export-option-btn" style="border-color:var(--gold);" onclick="watchAdForCoins()">
+        <span style="font-size:24px;">🎬</span>
+        <div>
+          <strong style="color:#fbbf24;">Watch Short Ad (+10 Free Coins)</strong>
+          <div style="font-size:11px; color:var(--text-muted);">Instant reward to build more AI apps</div>
+        </div>
+      </button>
+
+      <button class="export-option-btn" onclick="openApiModal()">
+        <span style="font-size:24px;">🔑</span>
+        <div>
+          <strong>Use Own Gemini API Key (Unlimited)</strong>
+          <div style="font-size:11px; color:var(--text-muted);">Zero coin cost with your own key</div>
+        </div>
+      </button>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="header-btn" onclick="closeModal('coinModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Optional Custom API Key -->
   <div class="modal" id="apiModal">
     <div class="modal-box">
-      <h3>🔑 Custom Gemini API Key (Optional)</h3>
-      <p style="font-size:12px; color:var(--text-muted);">Built-in Cloud AI is already active! Only paste a key here if you want to use your own private quota.</p>
+      <h3>🔑 Custom Gemini API Key</h3>
+      <p style="font-size:12px; color:var(--text-muted);">Paste your own key for unlimited builds without using coins.</p>
       <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." />
       <div style="display:flex; gap:8px; justify-content:flex-end;">
         <button class="header-btn" onclick="closeModal('apiModal')">Close</button>
@@ -351,6 +400,7 @@
     </div>
   </div>
 
+  <!-- MODAL 3: Export & Download Studio -->
   <div class="modal" id="exportModal">
     <div class="modal-box">
       <h3>📦 Export & Download App</h3>
@@ -370,12 +420,12 @@
       <button class="export-option-btn" onclick="downloadAndroidConfig()">
         <span style="font-size:24px;">🤖</span>
         <div>
-          <strong>Download Android APK / AAB Package</strong>
+          <strong>Download Android APK Package</strong>
           <div style="font-size:11px; color:var(--text-muted);">Ready source package for Cloud APK Build</div>
         </div>
       </button>
 
-      <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+      <div style="display:flex; justify-content:flex-end;">
         <button class="header-btn" onclick="closeModal('exportModal')">Close</button>
       </div>
     </div>
@@ -389,6 +439,7 @@
     let activeProjectId = null;
     let codeHistory = [];
     let selectedElementRef = null;
+    let userCoins = 20;
 
     const defaultTemplateCode = `<!DOCTYPE html>
 <html lang="en">
@@ -424,8 +475,8 @@
         codeTitle: 'Code Editor',
         codeDesc: 'QuickEdit-style fast code editor',
         projectsTitle: 'My Saved Apps',
-        placeholder: "Speak or type: e.g. 'Make a Snake game'...",
-        buildBtn: 'Build',
+        placeholder: "Speak or type: 'Make a Snake game'...",
+        buildBtn: 'Build (5🪙)',
         listening: '🎙️ Listening... Speak now'
       },
       'hi-IN': {
@@ -437,8 +488,8 @@
         codeTitle: 'कोड एडिटर',
         codeDesc: 'QuickEdit जैसा तेज़ कोड एडिटर',
         projectsTitle: 'मेरे सेव किए गए ऐप्स',
-        placeholder: "बोलें या लिखें: जैसे 'सांप वाला गेम बनाओ'...",
-        buildBtn: 'बनाएं',
+        placeholder: "बोलें या लिखें: 'सांप वाला गेम बनाओ'...",
+        buildBtn: 'बनाएं (5🪙)',
         listening: '🎙️ सुन रहा हूँ... बोलें'
       },
       'bn-IN': {
@@ -450,17 +501,54 @@
         codeTitle: 'কোড এডিটর',
         codeDesc: 'QuickEdit-এর মতো দ্রুত কোড এডিটর',
         projectsTitle: 'আমার সেভ করা অ্যাপস',
-        placeholder: "বলুন বা লিখুন: যেমন 'স্নেক গেম তৈরি করো'...",
-        buildBtn: 'তৈরি করুন',
+        placeholder: "বলুন বা লিখুন: 'স্নেক গেম তৈরি করো'...",
+        buildBtn: 'তৈরি (5🪙)',
         listening: '🎙️ শুনছি... বলুন'
       }
     };
 
     window.onload = () => {
+      initCoins();
       loadSavedProjects();
       const savedKey = localStorage.getItem('gemini_api_key');
       if (savedKey) document.getElementById('geminiApiKeyInput').value = savedKey;
     };
+
+    function initCoins() {
+      const today = new Date().toLocaleDateString();
+      const lastDate = localStorage.getItem('appmaker_coin_date');
+      const storedCoins = localStorage.getItem('appmaker_coins');
+      if (lastDate !== today || storedCoins === null) {
+        userCoins = 20;
+        localStorage.setItem('appmaker_coin_date', today);
+        localStorage.setItem('appmaker_coins', userCoins);
+      } else {
+        userCoins = parseInt(storedCoins, 10);
+      }
+      updateCoinUI();
+    }
+
+    function updateCoinUI() {
+      document.getElementById('coinCount').innerText = userCoins;
+      document.getElementById('modalCoinBal').innerText = userCoins + ' Coins';
+    }
+
+    function openCoinModal() {
+      updateCoinUI();
+      document.getElementById('coinModal').classList.add('active');
+    }
+
+    function watchAdForCoins() {
+      // AdMob Rewarded Ad Hook (Android WebView Interface)
+      if (window.AndroidAds && window.AndroidAds.showRewardedAd) {
+        window.AndroidAds.showRewardedAd();
+      }
+      userCoins += 10;
+      localStorage.setItem('appmaker_coins', userCoins);
+      updateCoinUI();
+      closeModal('coinModal');
+      alert('🎉 +10 Coins Added! Balance: ' + userCoins + ' Coins');
+    }
 
     function loadSavedProjects() {
       const raw = localStorage.getItem('appmaker_projects');
@@ -488,7 +576,7 @@
             <strong>${p.name}</strong>
             <div style="font-size:11px; color:var(--text-muted);">Updated: ${p.date}</div>
           </div>
-          <div class="proj-actions">
+          <div style="display:flex; gap:8px; align-items:center;">
             <span onclick="openExistingProject(${p.id})" style="color:var(--primary); font-size:12px; font-weight:600; cursor:pointer;">Edit →</span>
             <button class="del-btn" onclick="deleteProject(${p.id})">🗑️</button>
           </div>
@@ -651,7 +739,7 @@
       document.getElementById('btnBuild').innerText = t.buildBtn;
     }
 
-    function openApiModal() { document.getElementById('apiModal').classList.add('active'); }
+    function openApiModal() { closeModal('coinModal'); document.getElementById('apiModal').classList.add('active'); }
     function openExportModal() {
       if (!activeProjectId && projects.length > 0) {
         activeProjectId = projects[0].id;
@@ -760,7 +848,7 @@
       recognition.onstart = () => {
         micBtn.classList.add('listening');
         statusBox.style.display = 'flex';
-        statusText.innerText = t.listening + ' (' + currentLang + ')';
+        statusText.innerText = t.listening;
       };
 
       recognition.onresult = (event) => {
@@ -789,6 +877,12 @@
       if (!rawPrompt) return;
 
       const userCustomKey = localStorage.getItem('gemini_api_key');
+
+      if (!userCustomKey && userCoins < 5) {
+        openCoinModal();
+        return;
+      }
+
       const area = document.getElementById('codeArea');
       const statusBox = document.getElementById('aiStatus');
       const statusText = document.getElementById('aiStatusText');
@@ -825,6 +919,11 @@
         }
 
         if (data.candidates && data.candidates[0]) {
+          if (!userCustomKey) {
+            userCoins -= 5;
+            localStorage.setItem('appmaker_coins', userCoins);
+            updateCoinUI();
+          }
           let aiCode = data.candidates[0].content.parts[0].text;
           aiCode = aiCode.replace(/```html/g, '').replace(/```/g, '').trim();
           area.value = aiCode;
