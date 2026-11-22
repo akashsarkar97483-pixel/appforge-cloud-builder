@@ -1,6 +1,8 @@
 {
+  "id": "/appforge-cloud-builder/",
   "name": "AppMaker AI - Voice App Builder",
   "short_name": "AppMaker AI",
+  "description": "Create Android and web apps instantly using voice or text commands with AI.",
   "start_url": "/appforge-cloud-builder/",
   "scope": "/appforge-cloud-builder/",
   "display": "standalone",
@@ -12,7 +14,7 @@
       "src": "https://cdn-icons-png.flaticon.com/512/4712/4712035.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
