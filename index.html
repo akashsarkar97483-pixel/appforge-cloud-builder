@@ -3,932 +3,565 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AppMaker AI - Voice & Visual App Builder</title>
+  <title>AppMaker AI - Voice App Builder</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
   <style>
-    :root {
-      --bg-dark: #0f172a;
-      --bg-card: #1e293b;
-      --bg-panel: #111827;
-      --primary: #6366f1;
-      --primary-glow: rgba(99, 102, 241, 0.35);
-      --accent: #10b981;
-      --gold: #f59e0b;
-      --danger: #ef4444;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    html, body {
-      background: var(--bg-dark);
-      color: var(--text-main);
-      height: 100dvh;
-      max-height: 100dvh;
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
       display: flex;
       flex-direction: column;
+      height: 100dvh;
       overflow: hidden;
     }
-
     header {
-      background: var(--bg-panel);
-      padding: 8px 12px;
+      background: #1e293b;
+      padding: 10px 14px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
-      gap: 5px;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
       flex-shrink: 0;
     }
-    .logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
-    .logo span { background: var(--primary); padding: 2px 6px; border-radius: 6px; font-size: 10px; }
-    .header-actions { display: flex; align-items: center; gap: 5px; }
-    .coin-badge {
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 16px; }
+    .brand span { background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .coin-pill {
       background: rgba(245, 158, 11, 0.15);
-      border: 1px solid var(--gold);
+      border: 1px solid rgba(245, 158, 11, 0.4);
       color: #fbbf24;
-      padding: 5px 8px;
-      border-radius: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      white-space: nowrap;
     }
-    .header-btn, .lang-select {
-      background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border);
-      padding: 5px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; outline: none;
+    .vip-pill {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0f172a;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
     }
-    .lang-select { max-width: 90px; }
-
-    .screen { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
-    .screen.active { display: flex; }
-
-    .home-container { padding: 14px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; flex: 1; padding-bottom: 30px; }
-    .hero-card {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      padding: 18px; border-radius: 16px; box-shadow: 0 8px 24px var(--primary-glow);
+    .vip-pill.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
     }
-    .hero-card h2 { font-size: 19px; margin-bottom: 5px; }
-    .hero-card p { font-size: 12px; opacity: 0.92; margin-bottom: 12px; line-height: 1.4; }
-    .btn-voice-start {
-      background: #fff; color: #1e1b4b; border: none; padding: 10px 16px;
-      border-radius: 10px; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-    }
-
-    .grid-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .mode-card {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 14px;
-      border-radius: 14px; cursor: pointer;
-    }
-    .mode-icon { font-size: 22px; margin-bottom: 4px; }
-    .mode-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .mode-desc { font-size: 11px; color: var(--text-muted); }
-
-    .section-header { display: flex; justify-content: space-between; align-items: center; }
-    .section-title { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-    .btn-new-proj {
-      background: var(--primary); color: #fff; border: none; padding: 5px 10px;
-      border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
-    }
-
-    .templates-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; flex-shrink: 0; }
-    .template-card {
-      min-width: 130px; background: var(--bg-card); border: 1px solid var(--border);
-      padding: 11px; border-radius: 12px; cursor: pointer; flex-shrink: 0;
-    }
-
-    .project-list { display: flex; flex-direction: column; gap: 8px; }
-    .project-item {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 11px 13px;
-      border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .proj-info { flex: 1; cursor: pointer; }
-    .del-btn { background: rgba(239,68,68,0.15); color: #f87171; border: none; padding: 6px 8px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-
-    .workspace-tabs {
-      display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .tab-btn {
-      flex: 1; padding: 9px; background: none; border: none; color: var(--text-muted);
-      font-weight: 600; font-size: 13px; border-bottom: 2px solid transparent; cursor: pointer;
-    }
-    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.08); }
-
-    .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
-    .tab-content.active { display: flex; }
-
-    .widget-palette {
-      display: flex; gap: 6px; padding: 8px; background: var(--bg-card); overflow-x: auto; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .widget-chip {
-      background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 5px 10px; border-radius: 20px; font-size: 11px; white-space: nowrap; cursor: pointer;
-    }
-    .canvas-area {
-      flex: 1; padding: 10px; background: #0b1120; overflow: hidden; display: flex; flex-direction: column; min-height: 0;
-    }
-    #visualFrame { flex: 1; width: 100%; border: 2px dashed var(--border); border-radius: 10px; background: #ffffff; }
-
-    .prop-panel {
-      display: none; background: var(--bg-card); border-top: 2px solid var(--primary);
-      padding: 10px; gap: 6px; flex-direction: column; flex-shrink: 0;
-    }
-    .prop-panel.active { display: flex; }
-    .prop-row { display: flex; gap: 6px; align-items: center; }
-    .prop-input {
-      flex: 1; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 6px 8px; border-radius: 6px; font-size: 12px;
-    }
-    .color-picker { width: 34px; height: 28px; border: none; background: none; cursor: pointer; }
-
-    .code-toolbar {
-      display: flex; gap: 6px; padding: 7px; background: var(--bg-card); border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0;
-    }
-    .key-btn {
-      background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border);
-      padding: 5px 10px; border-radius: 6px; font-family: monospace; font-size: 12px; cursor: pointer; white-space: nowrap;
-    }
-    #codeArea {
-      flex: 1; width: 100%; background: #090d16; color: #38bdf8; border: none; padding: 12px;
-      font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; resize: none; outline: none;
-    }
-
-    #previewFrame { flex: 1; width: 100%; border: none; background: #ffffff; }
-
-    .ai-status {
-      background: #1e1b4b; color: #fde047; font-size: 12px; padding: 6px 12px;
-      display: none; align-items: center; justify-content: space-between; flex-shrink: 0;
-    }
-    .ai-bar {
-      background: var(--bg-panel); border-top: 1px solid var(--border); padding: 8px 10px;
-      display: flex; gap: 8px; align-items: center; flex-shrink: 0;
-    }
-    .ai-input {
-      flex: 1; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main);
-      padding: 9px 12px; border-radius: 22px; font-size: 13px; outline: none; min-width: 0;
-    }
-    .mic-btn {
-      width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff;
-      border: none; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    .tabs {
+      display: flex;
+      background: #1e293b;
+      padding: 6px;
+      gap: 6px;
+      border-bottom: 1px solid #334155;
       flex-shrink: 0;
     }
-    .mic-btn.listening { background: var(--danger); box-shadow: 0 0 12px rgba(239, 68, 68, 0.7); }
-    .send-btn {
-      background: var(--accent); color: #fff; border: none; padding: 9px 13px;
-      border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; flex-shrink: 0;
+    .tab-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #94a3b8;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
     }
-
+    .tab-btn.active { background: #4f46e5; color: #ffffff; }
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .row { display: flex; gap: 8px; align-items: center; }
+    select, input, textarea {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; width: 100%; }
+    .btn-mic { background: #ef4444; color: white; flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; font-size: 18px; }
+    .btn-mic.listening { animation: pulse 1s infinite; background: #dc2626; }
+    .btn-secondary { background: #334155; color: #e2e8f0; font-size: 12px; padding: 8px 10px; }
+    .btn-export { background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 12px; padding: 8px 12px; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+    #previewFrame {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      border: none;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+    #codeBox {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .hidden { display: none !important; }
+    .status { font-size: 12px; color: #a5b4fc; text-align: center; }
+    .project-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+    /* Always-on Bottom Banner Ad for Free Users */
+    #bottomBannerAd {
+      background: linear-gradient(90deg, #1e1b4b, #312e81);
+      border-top: 1px solid #4338ca;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      min-height: 52px;
+    }
+    .ad-tag {
+      background: #fbbf24;
+      color: #0f172a;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
     .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82);
-      justify-content: center; align-items: center; padding: 16px; z-index: 999;
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-radius: 18px;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
     }
-    .modal.active { display: flex; }
-    .modal-box {
-      background: var(--bg-card); border: 1px solid var(--border); padding: 18px;
-      border-radius: 16px; width: 100%; max-width: 370px; display: flex; flex-direction: column; gap: 11px;
-      max-height: 90dvh; overflow-y: auto;
+    .modal h2 { margin: 0 0 8px; font-size: 20px; color: #fbbf24; }
+    .modal p { font-size: 13px; color: #cbd5e1; margin: 0 0 14px; line-height: 1.5; }
+    .vip-perks {
+      text-align: left;
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      border: 1px solid #334155;
     }
-    .modal-box label { font-size: 12px; color: var(--text-muted); margin-bottom: -5px; }
-    .modal-box input {
-      background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 9px; border-radius: 8px; font-size: 13px; width: 100%;
-    }
-    .export-option-btn {
-      background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main);
-      padding: 11px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px;
-    }
+    .vip-perks div { margin: 6px 0; }
   </style>
 </head>
 <body>
-
   <header>
-    <div class="logo">⚡ AppMaker <span>AI</span></div>
+    <div class="brand">⚡ <span>AppMaker AI</span></div>
     <div class="header-actions">
-      <div class="coin-badge" onclick="openCoinModal()">🪙 <span id="coinCount">20</span></div>
-      <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
-        <option value="en-US" selected>🌐 EN</option>
-        <option value="hi-IN">🇮🇳 हिंदी</option>
-        <option value="bn-IN">🇮🇳 বাংলা</option>
-        <option value="ta-IN">🇮🇳 தமிழ்</option>
-        <option value="te-IN">🇮🇳 తెలుగు</option>
-        <option value="mr-IN">🇮🇳 मराठी</option>
-        <option value="gu-IN">🇮🇳 ગુજરાતી</option>
-        <option value="kn-IN">🇮🇳 ಕನ್ನಡ</option>
-        <option value="ml-IN">🇮🇳 മലയാളം</option>
-        <option value="pa-IN">🇮🇳 ਪੰਜਾਬੀ</option>
-        <option value="ur-IN">🇵🇰 اردو</option>
-        <option value="es-ES">🇪🇸 ES</option>
-        <option value="fr-FR">🇫🇷 FR</option>
-        <option value="de-DE">🇩🇪 DE</option>
-        <option value="ar-SA">🇸🇦 AR</option>
-        <option value="ru-RU">🇷🇺 RU</option>
-        <option value="pt-BR">🇧🇷 PT</option>
-        <option value="id-ID">🇮🇩 ID</option>
-        <option value="ja-JP">🇯🇵 JA</option>
-        <option value="ko-KR">🇰🇷 KO</option>
-      </select>
-      <button class="header-btn" id="homeNavBtn" onclick="goHome()" style="display:none;">🏠</button>
-      <button class="header-btn" onclick="openExportModal()">📦</button>
+      <button id="coinBtn" class="coin-pill" onclick="openStoreModal()">🪙 10 Coins</button>
+      <button id="vipBtn" class="vip-pill" onclick="openStoreModal()">👑 Go VIP</button>
     </div>
   </header>
 
-  <div id="homeScreen" class="screen active">
-    <div class="home-container">
-      <div class="hero-card">
-        <h2 id="txtHeroTitle">Build Apps with Your Voice 🎙️</h2>
-        <p id="txtHeroDesc">Just speak in your language — AI will automatically write the code and build your app.</p>
-        <button class="btn-voice-start" id="btnVoiceStart" onclick="createNewProject(true)">🎙️ Start Speaking</button>
-      </div>
-
-      <div class="grid-modes">
-        <div class="mode-card" onclick="createNewProject(false, 'design')">
-          <div class="mode-icon">🎨</div>
-          <div class="mode-title" id="txtVisualTitle">Visual Builder</div>
-          <div class="mode-desc" id="txtVisualDesc">Tap any element to edit color & text</div>
-        </div>
-        <div class="mode-card" onclick="createNewProject(false, 'code')">
-          <div class="mode-icon">💻</div>
-          <div class="mode-title" id="txtCodeTitle">Code Editor</div>
-          <div class="mode-desc" id="txtCodeDesc">QuickEdit-style fast code editor</div>
-        </div>
-      </div>
-
-      <div class="section-header">
-        <span class="section-title">⚡ Ready Templates (Free)</span>
-      </div>
-      <div class="templates-row">
-        <div class="template-card" onclick="loadTemplate('quiz')">
-          <div style="font-size:20px; margin-bottom:3px;">🧠</div>
-          <strong style="font-size:13px;">Quiz Game</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Score + Questions</div>
-        </div>
-        <div class="template-card" onclick="loadTemplate('todo')">
-          <div style="font-size:20px; margin-bottom:3px;">✅</div>
-          <strong style="font-size:13px;">Todo List</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Daily Task Manager</div>
-        </div>
-        <div class="template-card" onclick="loadTemplate('expense')">
-          <div style="font-size:20px; margin-bottom:3px;">💰</div>
-          <strong style="font-size:13px;">Expense Tracker</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Income & Spend</div>
-        </div>
-        <div class="template-card" onclick="loadTemplate('quotes')">
-          <div style="font-size:20px; margin-bottom:3px;">✨</div>
-          <strong style="font-size:13px;">Quotes / Shayari</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Copy & Share App</div>
-        </div>
-      </div>
-
-      <div class="section-header">
-        <span class="section-title" id="txtProjectsTitle">My Saved Apps</span>
-        <button class="btn-new-proj" onclick="createNewProject(false, 'design')">+ New App</button>
-      </div>
-      <div class="project-list" id="projectListContainer"></div>
-    </div>
+  <div class="tabs">
+    <button class="tab-btn active" id="tabBuild" onclick="switchTab('build')">🎙️ Build</button>
+    <button class="tab-btn" id="tabPreview" onclick="switchTab('preview')">▶️ Preview</button>
+    <button class="tab-btn" id="tabCode" onclick="switchTab('code')">💻 Code</button>
+    <button class="tab-btn" id="tabApps" onclick="switchTab('apps')">📂 My Apps</button>
   </div>
 
-  <div id="workspaceScreen" class="screen">
-    <div class="workspace-tabs">
-      <button class="tab-btn active" id="tab-design" onclick="switchTab('design')">🎨 Design</button>
-      <button class="tab-btn" id="tab-code" onclick="switchTab('code')">💻 Code</button>
-      <button class="tab-btn" id="tab-preview" onclick="switchTab('preview')">▶️ Preview</button>
-    </div>
-
-    <div id="panel-design" class="tab-content active">
-      <div class="widget-palette">
-        <button class="widget-chip" onclick="addElement('heading')">+ Heading</button>
-        <button class="widget-chip" onclick="addElement('text')">+ Text</button>
-        <button class="widget-chip" onclick="addElement('button')">+ Button</button>
-        <button class="widget-chip" onclick="addElement('input')">+ Input</button>
-        <button class="widget-chip" onclick="addElement('card')">+ Card</button>
-      </div>
-      <div class="canvas-area">
-        <iframe id="visualFrame"></iframe>
-      </div>
-
-      <div class="prop-panel" id="propPanel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong style="font-size:12px; color:#a5b4fc;">🎨 Edit Element</strong>
-          <div style="display:flex; gap:6px;">
-            <button class="del-btn" onclick="deleteSelectedElement()">🗑️ Remove</button>
-            <button class="header-btn" onclick="closePropPanel()">✕</button>
-          </div>
+  <main>
+    <!-- BUILD TAB -->
+    <section id="viewBuild">
+      <div class="card">
+        <div class="row" style="margin-bottom: 10px;">
+          <select id="langSelect">
+            <option value="hi-IN">🇮🇳 Hindi (हिंदी)</option>
+            <option value="bn-IN">🇮🇳 Bengali (বাংলা)</option>
+            <option value="en-IN" selected>🇮🇳 English (India)</option>
+            <option value="ta-IN">🇮🇳 Tamil (தமிழ்)</option>
+            <option value="te-IN">🇮🇳 Telugu (తెలుగు)</option>
+            <option value="mr-IN">🇮🇳 Marathi (मराठी)</option>
+            <option value="gu-IN">🇮🇳 Gujarati (ગુજરાતી)</option>
+            <option value="kn-IN">🇮🇳 Kannada (ಕನ್ನಡ)</option>
+            <option value="ml-IN">🇮🇳 Malayalam (മലയാളം)</option>
+            <option value="pa-IN">🇮🇳 Punjabi (ਪੰਜਾਬੀ)</option>
+            <option value="ur-IN">🇮🇳 Urdu (اردو)</option>
+            <option value="es-ES">🇪🇸 Spanish</option>
+            <option value="fr-FR">🇫🇷 French</option>
+            <option value="ar-SA">🇸🇦 Arabic</option>
+          </select>
+          <button id="micBtn" class="btn btn-mic" onclick="toggleVoice()" title="Speak App Idea">🎙️</button>
         </div>
-        <div class="prop-row">
-          <input type="text" id="propText" class="prop-input" placeholder="Text..." oninput="updateSelectedElement()" />
-          <input type="color" id="propBgColor" class="color-picker" value="#4f46e5" oninput="updateSelectedElement()" />
-          <input type="color" id="propTextColor" class="color-picker" value="#ffffff" oninput="updateSelectedElement()" />
+        <textarea id="promptInput" placeholder="Bolkar ya likhkar batayein kaisa app banana hai... (Jaise: Ek multi-tab Hisab-Kitab aur Bill Calculator app banao)"></textarea>
+        <div style="margin-top: 10px;">
+          <button id="buildBtn" class="btn btn-primary" onclick="generateApp()">⚡ Build App (10 🪙)</button>
+        </div>
+        <p id="statusText" class="status" style="margin-top: 8px;">Ready! Pehla app 10 free coins se banayein.</p>
+      </div>
+
+      <div class="card">
+        <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #94a3b8;">⚡ Quick Ideas (1-Tap)</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <button class="btn btn-secondary" onclick="setIdea('Ek multi-tab Dukan Hisab-Kitab, Udhar Khata aur GST Calculator app banao')">📒 Dukan Khata App</button>
+          <button class="btn btn-secondary" onclick="setIdea('Ek Snake aur Ludo style arcade game app banao high score ke saath')">🎮 Arcade Game</button>
+          <button class="btn btn-secondary" onclick="setIdea('Ek Daily Expense Tracker, Budget Planner aur EMI Calculator app banao')">💰 Expense & EMI</button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div id="panel-code" class="tab-content">
-      <div class="code-toolbar">
-        <button class="key-btn" onclick="undoCode()">↩️ Undo</button>
-        <button class="key-btn" style="background:#312e81; border-color:#6366f1;" onclick="fixCodeWithAI()">✨ AI Fix</button>
-        <button class="key-btn" onclick="insertSymbol('<')">&lt;</button>
-        <button class="key-btn" onclick="insertSymbol('>')">&gt;</button>
-        <button class="key-btn" onclick="insertSymbol('/')">/</button>
-        <button class="key-btn" onclick="copyCode()">📋 Copy</button>
+    <!-- PREVIEW TAB -->
+    <section id="viewPreview" class="hidden" style="height: 100%; display: flex; flex-direction: column; gap: 8px;">
+      <div class="row" style="justify-content: space-between;">
+        <button class="btn btn-secondary" onclick="saveCurrentProject()">💾 Save App</button>
+        <button class="btn btn-export" onclick="exportHtmlCode()">📦 Export HTML (VIP)</button>
       </div>
-      <textarea id="codeArea" spellcheck="false" oninput="onCodeChange()"></textarea>
-    </div>
+      <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-modals"></iframe>
+    </section>
 
-    <div id="panel-preview" class="tab-content">
-      <iframe id="previewFrame"></iframe>
-    </div>
+    <!-- CODE TAB -->
+    <section id="viewCode" class="hidden" style="height: 100%; display: flex; flex-direction: column; gap: 8px;">
+      <div class="row" style="justify-content: space-between;">
+        <button class="btn btn-secondary" onclick="applyManualCode()">▶️ Run Edited Code</button>
+        <button class="btn btn-export" onclick="exportHtmlCode()">📦 Download .HTML (VIP)</button>
+      </div>
+      <textarea id="codeBox" placeholder="Yahan app ka HTML code dikhega..."></textarea>
+    </section>
 
-    <div class="ai-status" id="aiStatus">
-      <span id="aiStatusText">🎙️ Listening... Speak now</span>
-    </div>
+    <!-- MY APPS TAB -->
+    <section id="viewApps" class="hidden">
+      <div class="card">
+        <div style="font-weight: 700; font-size: 14px;">📂 Saved Projects</div>
+        <div id="projectsList" style="margin-top: 8px; font-size: 13px; color: #94a3b8;">Abhi koi app save nahi hai.</div>
+      </div>
+    </section>
+  </main>
 
-    <div class="ai-bar">
-      <button class="mic-btn" id="micBtn" onclick="startVoiceRecognition()">🎙️</button>
-      <input type="text" class="ai-input" id="aiPrompt" placeholder="Speak or type: 'Make a Snake game'..." />
-      <button class="send-btn" id="btnBuild" onclick="processAICommand()">Build (5🪙)</button>
+  <!-- ALWAYS-ON BOTTOM BANNER AD (Hidden automatically for ₹499 Annual VIP) -->
+  <div id="bottomBannerAd">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="ad-tag">AD</span>
+      <div style="font-size: 12px; line-height: 1.2;">
+        <strong>AppMaker Free Tier</strong><br/>
+        <span style="color: #c7d2fe; font-size: 11px;">Ads hatane ke liye ₹499/yr VIP lein</span>
+      </div>
     </div>
+    <button class="vip-pill" onclick="openStoreModal()">Remove Ads</button>
   </div>
 
-  <div class="modal" id="coinModal">
-    <div class="modal-box">
-      <h3>🪙 AI Builder Coins</h3>
-      <p style="font-size:13px; color:var(--text-muted);">Current Balance: <strong style="color:#fbbf24;" id="modalCoinBal">20 Coins</strong><br>Each AI App generation uses <strong>5 Coins</strong>.</p>
+  <!-- COINS & ₹499 ANNUAL VIP STORE MODAL -->
+  <div id="storeModal" class="modal-backdrop hidden">
+    <div class="modal">
+      <h2>👑 AppMaker AI VIP</h2>
+      <p id="modalSubtext">Aapke free coins khatam ho gaye hain! Naya app banane ke liye ek chhota ad dekhein ya 1 saal ke liye Ad-Free VIP banein.</p>
 
-      <button class="export-option-btn" style="border-color:var(--gold);" onclick="watchAdForCoins()">
-        <span style="font-size:24px;">🎬</span>
-        <div>
-          <strong style="color:#fbbf24;">Watch Short Ad (+10 Free Coins)</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Instant reward to build more AI apps</div>
-        </div>
-      </button>
-
-      <button class="export-option-btn" onclick="openApiModal()">
-        <span style="font-size:24px;">🔑</span>
-        <div>
-          <strong>Use Own Gemini API Key (Unlimited)</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Zero coin cost with your own key</div>
-        </div>
-      </button>
-
-      <div style="display:flex; justify-content:flex-end;">
-        <button class="header-btn" onclick="closeModal('coinModal')">Close</button>
+      <div class="vip-perks">
+        <div>🚫 <strong>100% Ad-Free:</strong> Neeche ka Banner aur Video Ads band</div>
+        <div>♾️ <strong>Unlimited App Builds:</strong> Bina coin tension ke apps banayein</div>
+        <div>📦 <strong>Export HTML Code:</strong> Apne apps ka code download karein</div>
+        <div>📅 <strong>1 Year Validity:</strong> Poore 365 din ke liye valid</div>
       </div>
-    </div>
-  </div>
 
-  <div class="modal" id="apiModal">
-    <div class="modal-box">
-      <h3>🔑 Custom Gemini API Key</h3>
-      <p style="font-size:12px; color:var(--text-muted);">Paste your own key for unlimited builds without using coins.</p>
-      <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." />
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="header-btn" onclick="closeModal('apiModal')">Close</button>
-        <button class="send-btn" onclick="saveApiKey()">Save Key</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="exportModal">
-    <div class="modal-box">
-      <h3>📦 Export & Download App</h3>
-      <label>App Name</label>
-      <input type="text" id="expAppName" value="My Awesome App" />
-      <label>Package Name (for Play Store)</label>
-      <input type="text" id="expPkgName" value="com.appmaker.myapp" />
-
-      <button class="export-option-btn" onclick="downloadHTMLFile()">
-        <span style="font-size:24px;">📄</span>
-        <div>
-          <strong>Download App File (.html)</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Instant download to phone Downloads folder</div>
-        </div>
+      <button class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; margin-bottom: 10px;" onclick="activateAnnualVip()">
+        👑 Unlock 1-Year VIP — ₹499 / Year
       </button>
 
-      <button class="export-option-btn" onclick="downloadAndroidConfig()">
-        <span style="font-size:24px;">🤖</span>
-        <div>
-          <strong>Download Android APK Package</strong>
-          <div style="font-size:11px; color:var(--text-muted);">Ready source package for Cloud APK Build</div>
-        </div>
+      <button id="watchAdBtn" class="btn btn-secondary" style="width: 100%; padding: 12px; font-size: 14px; margin-bottom: 8px;" onclick="watchRewardedAd()">
+        🎬 Watch Video Ad (+10 Coins Free)
       </button>
 
-      <div style="display:flex; justify-content:flex-end;">
-        <button class="header-btn" onclick="closeModal('exportModal')">Close</button>
-      </div>
+      <button class="btn" style="background: transparent; color: #94a3b8; font-size: 12px; width: 100%;" onclick="closeStoreModal()">Band Karein</button>
     </div>
   </div>
 
   <script>
-    const CLOUDFLARE_WORKER_URL = "https://raftaar-ai-server.akashsarkar97483.workers.dev";
+    const WORKER_URL = "https://appforge-proxy.sarkar97483.workers.dev";
+    const APP_COST = 10; // 10 coins per app build
+    const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
-    let currentLang = 'en-US';
-    let projects = [];
-    let activeProjectId = null;
-    let codeHistory = [];
-    let selectedElementRef = null;
-    let userCoins = 20;
+    let coins = parseInt(localStorage.getItem("appmaker_coins") ?? "10", 10);
+    let vipExpiry = parseInt(localStorage.getItem("appmaker_vip_expiry") ?? "0", 10);
+    let projects = JSON.parse(localStorage.getItem("appmaker_projects") || "[]");
 
-    const defaultTemplateCode = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 24px; background: #f8fafc; color: #0f172a; }
-    h1 { color: #4f46e5; margin-bottom: 8px; }
-    button { background: #4f46e5; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-size: 16px; margin-top: 12px; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <h1>Hello! My New App</h1>
-  <p>Tap any item in Design mode to edit color & text, or use the mic below.</p>
-  <button onclick="alert('Your app is working great!')">Click Me</button>
-</body>
-</html>`;
+    function isVipActive() {
+      return Date.now() < vipExpiry;
+    }
 
-    const readyTemplates = {
-      quiz: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:#1e1b4b;color:white;padding:20px;text-align:center}.card{background:#312e81;padding:20px;border-radius:16px;margin-top:20px}button{display:block;width:100%;padding:12px;margin:10px 0;border:none;border-radius:10px;background:#6366f1;color:white;font-size:16px}</style></head><body><h2>🧠 GK Quiz App</h2><div class="card"><p id="q">Which planet is known as the Red Planet?</p><button onclick="check(true)">Mars</button><button onclick="check(false)">Venus</button><button onclick="check(false)">Jupiter</button></div><p id="res"></p><script>function check(ok){document.getElementById('res').innerText=ok?'✅ Correct! +10 Points':'❌ Wrong Answer!';}<\/script></body></html>`,
-      todo: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:#f8fafc;padding:20px}input{padding:10px;width:70%;border:1px solid #cbd5e1;border-radius:8px}button{padding:10px 14px;background:#10b981;color:white;border:none;border-radius:8px}li{background:white;padding:12px;margin-top:8px;border-radius:8px;list-style:none;box-shadow:0 1px 4px rgba(0,0,0,0.1)}</style></head><body><h2>✅ My Todo List</h2><input id="t" placeholder="New task..."><button onclick="add()">Add</button><ul id="list"></ul><script>function add(){let v=document.getElementById('t').value;if(!v)return;let li=document.createElement('li');li.innerText=v;li.onclick=()=>li.remove();document.getElementById('list').appendChild(li);document.getElementById('t').value='';}<\/script></body></html>`,
-      expense: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:#0f172a;color:white;padding:20px;text-align:center}.bal{background:#10b981;padding:20px;border-radius:14px;font-size:24px;font-weight:bold;margin:15px 0}input{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none;box-sizing:border-box}button{width:100%;padding:12px;background:#6366f1;color:white;border:none;border-radius:8px;margin-top:8px}</style></head><body><h2>💰 Expense Tracker</h2><div class="bal">Total Spent: ₹<span id="tot">0</span></div><input id="item" placeholder="Item name (e.g. Tea)"><input id="amt" type="number" placeholder="Amount (₹)"><button onclick="addExp()">Add Expense</button><div id="hist" style="margin-top:15px;text-align:left"></div><script>let total=0;function addExp(){let i=item.value,a=Number(amt.value);if(!i||!a)return;total+=a;tot.innerText=total;hist.innerHTML+='<p>• '+i+': ₹'+a+'</p>';item.value='';amt.value='';}<\/script></body></html>`,
-      quotes: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{font-family:sans-serif;background:linear-gradient(135deg,#ec4899,#8b5cf6);color:white;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center;margin:0}.qbox{background:rgba(255,255,255,0.15);padding:24px;border-radius:16px;font-size:18px;margin-bottom:20px}button{background:white;color:#6d28d9;border:none;padding:12px 24px;border-radius:24px;font-weight:bold}</style></head><body><h2>✨ Daily Quotes</h2><div class="qbox" id="q">"Believe you can and you're halfway there."</div><button onclick="nextQ()">Next Quote →</button><script>const qs=['"Start where you are. Use what you have."','"Dream big and dare to fail."','"Success is not final, failure is not fatal."'];let idx=0;function nextQ(){idx=(idx+1)%qs.length;document.getElementById('q').innerText=qs[idx];}<\/script></body></html>`
-    };
+    function updateUI() {
+      const vip = isVipActive();
+      const coinBtn = document.getElementById("coinBtn");
+      const vipBtn = document.getElementById("vipBtn");
+      const bannerAd = document.getElementById("bottomBannerAd");
+      const buildBtn = document.getElementById("buildBtn");
 
-    const translations = {
-      'en-US': {
-        heroTitle: 'Build Apps with Your Voice 🎙️',
-        heroDesc: 'Just speak in your language — AI will automatically write the code and build your app.',
-        voiceStart: '🎙️ Start Speaking',
-        visualTitle: 'Visual Builder',
-        visualDesc: 'Tap any element to edit color & text',
-        codeTitle: 'Code Editor',
-        codeDesc: 'QuickEdit-style fast code editor',
-        projectsTitle: 'My Saved Apps',
-        placeholder: "Speak or type: 'Make a Snake game'...",
-        buildBtn: 'Build (5🪙)',
-        listening: '🎙️ Listening... Speak now'
-      },
-      'hi-IN': {
-        heroTitle: 'बोलकर अपना ऐप बनाएं 🎙️',
-        heroDesc: 'अपनी भाषा में बोलें — AI अपने आप कोड लिखेगा और ऐप तैयार कर देगा।',
-        voiceStart: '🎙️ बोलकर शुरू करें',
-        visualTitle: 'विज़ुअल बिल्डर',
-        visualDesc: 'किसी भी बटन या टेक्स्ट पर टैप करके रंग बदलें',
-        codeTitle: 'कोड एडिटर',
-        codeDesc: 'QuickEdit जैसा तेज़ कोड एडिटर',
-        projectsTitle: 'मेरे सेव किए गए ऐप्स',
-        placeholder: "बोलें या लिखें: 'सांप वाला गेम बनाओ'...",
-        buildBtn: 'बनाएं (5🪙)',
-        listening: '🎙️ सुन रहा हूँ... बोलें'
-      },
-      'bn-IN': {
-        heroTitle: 'কথা বলে অ্যাপ তৈরি করুন 🎙️',
-        heroDesc: 'আপনার ভাষায় বলুন — AI নিজে থেকেই কোড লিখে অ্যাপ তৈরি করে দেবে।',
-        voiceStart: '🎙️ কথা বলে শুরু করুন',
-        visualTitle: 'ভিজ্যুয়াল বিল্ডার',
-        visualDesc: 'যেকোনো বাটন বা লেখায় ট্যাপ করে রঙ বদলান',
-        codeTitle: 'কোড এডিটর',
-        codeDesc: 'QuickEdit-এর মতো দ্রুত কোড এডিটর',
-        projectsTitle: 'আমার সেভ করা অ্যাপস',
-        placeholder: "বলুন বা লিখুন: 'স্নেক গেম তৈরি করো'...",
-        buildBtn: 'তৈরি (5🪙)',
-        listening: '🎙️ শুনছি... বলুন'
-      }
-    };
-
-    window.onload = () => {
-      initCoins();
-      loadSavedProjects();
-      const savedKey = localStorage.getItem('gemini_api_key');
-      if (savedKey) document.getElementById('geminiApiKeyInput').value = savedKey;
-    };
-
-    function initCoins() {
-      const today = new Date().toLocaleDateString();
-      const lastDate = localStorage.getItem('appmaker_coin_date');
-      const storedCoins = localStorage.getItem('appmaker_coins');
-      if (lastDate !== today || storedCoins === null) {
-        userCoins = 20;
-        localStorage.setItem('appmaker_coin_date', today);
-        localStorage.setItem('appmaker_coins', userCoins);
+      if (vip) {
+        const daysLeft = Math.ceil((vipExpiry - Date.now()) / (24 * 60 * 60 * 1000));
+        coinBtn.textContent = "♾️ Unlimited";
+        vipBtn.textContent = `👑 VIP (${daysLeft}d)`;
+        vipBtn.classList.add("active");
+        bannerAd.classList.add("hidden");
+        buildBtn.textContent = "⚡ Build App (VIP Free)";
       } else {
-        userCoins = parseInt(storedCoins, 10);
+        coinBtn.textContent = `🪙 ${coins} Coins`;
+        vipBtn.textContent = "👑 Go VIP ₹499";
+        vipBtn.classList.remove("active");
+        bannerAd.classList.remove("hidden");
+        buildBtn.textContent = `⚡ Build App (${APP_COST} 🪙)`;
       }
-      updateCoinUI();
+      renderProjects();
     }
 
-    function updateCoinUI() {
-      document.getElementById('coinCount').innerText = userCoins;
-      document.getElementById('modalCoinBal').innerText = userCoins + ' Coins';
-    }
-
-    function openCoinModal() {
-      updateCoinUI();
-      document.getElementById('coinModal').classList.add('active');
-    }
-
-    function watchAdForCoins() {
-      if (window.AndroidAds && window.AndroidAds.showRewardedAd) {
-        window.AndroidAds.showRewardedAd();
-      }
-      userCoins += 10;
-      localStorage.setItem('appmaker_coins', userCoins);
-      updateCoinUI();
-      closeModal('coinModal');
-      alert('🎉 +10 Coins Added! Balance: ' + userCoins + ' Coins');
-    }
-
-    function loadSavedProjects() {
-      const raw = localStorage.getItem('appmaker_projects');
-      if (raw) {
-        projects = JSON.parse(raw);
-      } else {
-        projects = [{ id: Date.now(), name: 'My First App', code: defaultTemplateCode, date: new Date().toLocaleDateString() }];
-        saveProjectsToStorage();
-      }
-      renderProjectList();
-    }
-
-    function saveProjectsToStorage() {
-      localStorage.setItem('appmaker_projects', JSON.stringify(projects));
-    }
-
-    function renderProjectList() {
-      const container = document.getElementById('projectListContainer');
-      container.innerHTML = '';
-      projects.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'project-item';
-        div.innerHTML = `
-          <div class="proj-info" onclick="openExistingProject(${p.id})">
-            <strong>${p.name}</strong>
-            <div style="font-size:11px; color:var(--text-muted);">Updated: ${p.date}</div>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span onclick="openExistingProject(${p.id})" style="color:var(--primary); font-size:12px; font-weight:600; cursor:pointer;">Edit →</span>
-            <button class="del-btn" onclick="deleteProject(${p.id})">🗑️</button>
-          </div>
-        `;
-        container.appendChild(div);
+    function switchTab(tab) {
+      ["build", "preview", "code", "apps"].forEach(t => {
+        document.getElementById("view" + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle("hidden", t !== tab);
+        document.getElementById("tab" + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle("active", t === tab);
       });
     }
 
-    function createNewProject(autoListen, tab = 'design') {
-      const name = 'App #' + (projects.length + 1);
-      const newProj = { id: Date.now(), name: name, code: defaultTemplateCode, date: new Date().toLocaleDateString() };
-      projects.unshift(newProj);
-      saveProjectsToStorage();
-      openExistingProject(newProj.id, tab, autoListen);
+    function setIdea(text) {
+      document.getElementById("promptInput").value = text;
     }
 
-    function loadTemplate(tplKey) {
-      const titles = { quiz: 'GK Quiz App', todo: 'Todo List App', expense: 'Expense Tracker', quotes: 'Daily Quotes App' };
-      const newProj = { id: Date.now(), name: titles[tplKey], code: readyTemplates[tplKey], date: new Date().toLocaleDateString() };
-      projects.unshift(newProj);
-      saveProjectsToStorage();
-      openExistingProject(newProj.id, 'preview', false);
-    }
-
-    function openExistingProject(id, tab = 'design', autoListen = false) {
-      const proj = projects.find(p => p.id === id);
-      if (!proj) return;
-      activeProjectId = id;
-      codeHistory = [proj.code];
-      document.getElementById('codeArea').value = proj.code;
-      document.getElementById('expAppName').value = proj.name;
-      switchScreen('workspaceScreen');
-      switchTab(tab);
-      syncFrames();
-      if (autoListen) setTimeout(() => startVoiceRecognition(), 400);
-    }
-
-    function deleteProject(id) {
-      if (!confirm('Delete this app?')) return;
-      projects = projects.filter(p => p.id !== id);
-      saveProjectsToStorage();
-      renderProjectList();
-    }
-
-    function goHome() {
-      closePropPanel();
-      renderProjectList();
-      switchScreen('homeScreen');
-    }
-
-    function pushHistory(code) {
-      if (codeHistory[codeHistory.length - 1] !== code) {
-        codeHistory.push(code);
-        if (codeHistory.length > 25) codeHistory.shift();
-      }
-    }
-
-    function undoCode() {
-      if (codeHistory.length > 1) {
-        codeHistory.pop();
-        const prev = codeHistory[codeHistory.length - 1];
-        document.getElementById('codeArea').value = prev;
-        onCodeChange(false);
-      } else {
-        alert('Nothing to undo');
-      }
-    }
-
-    function onCodeChange(record = true) {
-      const code = document.getElementById('codeArea').value;
-      if (record) pushHistory(code);
-      syncFrames();
-      const proj = projects.find(p => p.id === activeProjectId);
-      if (proj) {
-        proj.code = code;
-        proj.date = new Date().toLocaleDateString();
-        saveProjectsToStorage();
-      }
-    }
-
-    function syncFrames() {
-      const code = document.getElementById('codeArea').value;
-      document.getElementById('previewFrame').srcdoc = code;
-
-      const vFrame = document.getElementById('visualFrame');
-      vFrame.srcdoc = code;
-      vFrame.onload = () => {
-        try {
-          const doc = vFrame.contentDocument;
-          doc.body.addEventListener('click', (e) => {
-            if (e.target === doc.body || e.target === doc.documentElement) return;
-            e.preventDefault();
-            e.stopPropagation();
-            selectVisualElement(e.target);
-          });
-        } catch (err) {}
-      };
-    }
-
-    function selectVisualElement(el) {
-      selectedElementRef = el;
-      const panel = document.getElementById('propPanel');
-      panel.classList.add('active');
-      document.getElementById('propText').value = el.innerText || el.placeholder || '';
-    }
-
-    function updateSelectedElement() {
-      if (!selectedElementRef) return;
-      const txt = document.getElementById('propText').value;
-      const bg = document.getElementById('propBgColor').value;
-      const fg = document.getElementById('propTextColor').value;
-
-      if (selectedElementRef.tagName === 'INPUT') {
-        selectedElementRef.placeholder = txt;
-      } else {
-        selectedElementRef.innerText = txt;
-      }
-      selectedElementRef.style.backgroundColor = bg;
-      selectedElementRef.style.color = fg;
-
-      saveVisualFrameToCode();
-    }
-
-    function deleteSelectedElement() {
-      if (!selectedElementRef) return;
-      selectedElementRef.remove();
-      closePropPanel();
-      saveVisualFrameToCode();
-    }
-
-    function saveVisualFrameToCode() {
-      const vFrame = document.getElementById('visualFrame');
-      const updatedHTML = '<!DOCTYPE html>\n' + vFrame.contentDocument.documentElement.outerHTML;
-      document.getElementById('codeArea').value = updatedHTML;
-      document.getElementById('previewFrame').srcdoc = updatedHTML;
-      const proj = projects.find(p => p.id === activeProjectId);
-      if (proj) {
-        proj.code = updatedHTML;
-        saveProjectsToStorage();
-      }
-    }
-
-    function closePropPanel() {
-      selectedElementRef = null;
-      document.getElementById('propPanel').classList.remove('active');
-    }
-
-    function changeLanguage(langCode) {
-      currentLang = langCode;
-      const t = translations[langCode] || translations['en-US'];
-      document.getElementById('txtHeroTitle').innerText = t.heroTitle;
-      document.getElementById('txtHeroDesc').innerText = t.heroDesc;
-      document.getElementById('btnVoiceStart').innerText = t.voiceStart;
-      document.getElementById('txtVisualTitle').innerText = t.visualTitle;
-      document.getElementById('txtVisualDesc').innerText = t.visualDesc;
-      document.getElementById('txtCodeTitle').innerText = t.codeTitle;
-      document.getElementById('txtCodeDesc').innerText = t.codeDesc;
-      document.getElementById('txtProjectsTitle').innerText = t.projectsTitle;
-      document.getElementById('aiPrompt').placeholder = t.placeholder;
-      document.getElementById('btnBuild').innerText = t.buildBtn;
-    }
-
-    function openApiModal() { closeModal('coinModal'); document.getElementById('apiModal').classList.add('active'); }
-    function openExportModal() {
-      if (!activeProjectId && projects.length > 0) {
-        activeProjectId = projects[0].id;
-        document.getElementById('codeArea').value = projects[0].code;
-      }
-      document.getElementById('exportModal').classList.add('active');
-    }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    function saveApiKey() {
-      const key = document.getElementById('geminiApiKeyInput').value.trim();
-      localStorage.setItem('gemini_api_key', key);
-      closeModal('apiModal');
-      alert('Custom API Key Saved!');
-    }
-
-    function downloadHTMLFile() {
-      const appName = document.getElementById('expAppName').value.trim() || 'MyApp';
-      const code = document.getElementById('codeArea').value;
-      const blob = new Blob([code], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = appName.replace(/\s+/g, '_') + '.html';
-      a.click();
-    }
-
-    function downloadAndroidConfig() {
-      const appName = document.getElementById('expAppName').value.trim() || 'MyApp';
-      const pkgName = document.getElementById('expPkgName').value.trim() || 'com.appmaker.myapp';
-      const code = document.getElementById('codeArea').value;
-      const configBundle = `/* === ANDROID CLOUD BUILD PACKAGE ===\nApp Name: ${appName}\nPackage ID: ${pkgName}\n=================================== */\n\n${code}`;
-      const blob = new Blob([configBundle], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = pkgName + '_android_source.html';
-      a.click();
-      alert('Android Source Package Downloaded!');
-    }
-
-    function switchScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-      document.getElementById('homeNavBtn').style.display = (screenId === 'workspaceScreen') ? 'inline-block' : 'none';
-    }
-
-    function switchTab(tabName) {
-      closePropPanel();
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById('tab-' + tabName).classList.add('active');
-      document.getElementById('panel-' + tabName).classList.add('active');
-      syncFrames();
-    }
-
-    function insertSymbol(sym) {
-      const area = document.getElementById('codeArea');
-      const start = area.selectionStart;
-      const end = area.selectionEnd;
-      area.value = area.value.substring(0, start) + sym + area.value.substring(end);
-      area.selectionStart = area.selectionEnd = start + sym.length;
-      area.focus();
-      onCodeChange();
-    }
-
-    function copyCode() {
-      const area = document.getElementById('codeArea');
-      area.select();
-      document.execCommand('copy');
-      alert('Code Copied!');
-    }
-
-    function addElement(type) {
-      const area = document.getElementById('codeArea');
-      let snippet = '';
-      if (type === 'heading') snippet = '\n  <h2>New Heading</h2>';
-      if (type === 'text') snippet = '\n  <p>This is a new paragraph text.</p>';
-      if (type === 'button') snippet = '\n  <br><button style="background:#10b981; color:white; padding:10px 20px; border:none; border-radius:8px; margin:6px;">New Button</button>';
-      if (type === 'input') snippet = '\n  <br><input type="text" placeholder="Type here..." style="padding:10px; margin:8px; border-radius:8px; border:1px solid #cbd5e1; width:80%;">';
-      if (type === 'card') snippet = '\n  <div style="background:white; padding:16px; margin:12px auto; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1); max-width:300px;"><h3>Card Title</h3><p>Card description goes here.</p></div>';
-
-      area.value = area.value.replace('</body>', snippet + '\n</body>');
-      onCodeChange();
-    }
-
-    function fixCodeWithAI() {
-      document.getElementById('aiPrompt').value = "Fix any HTML, CSS, or JavaScript bugs in this app and make the UI clean and responsive.";
-      processAICommand();
-    }
-
-    function startVoiceRecognition() {
+    // Voice Input
+    let recognition = null;
+    function toggleVoice() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Voice recognition is not supported in this browser. Please type your command.");
+        alert("Aapke browser mein voice typing support nahi hai.");
         return;
       }
-
-      const recognition = new SpeechRecognition();
-      recognition.lang = currentLang;
+      const micBtn = document.getElementById("micBtn");
+      if (recognition) {
+        recognition.stop();
+        recognition = null;
+        micBtn.classList.remove("listening");
+        return;
+      }
+      recognition = new SpeechRecognition();
+      recognition.lang = document.getElementById("langSelect").value;
       recognition.interimResults = false;
+      micBtn.classList.add("listening");
+      document.getElementById("statusText").textContent = "🎙️ Sun raha hoon... Boliye!";
 
-      const micBtn = document.getElementById('micBtn');
-      const statusBox = document.getElementById('aiStatus');
-      const statusText = document.getElementById('aiStatusText');
-      const t = translations[currentLang] || translations['en-US'];
-
-      recognition.onstart = () => {
-        micBtn.classList.add('listening');
-        statusBox.style.display = 'flex';
-        statusText.innerText = t.listening;
+      recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        const box = document.getElementById("promptInput");
+        box.value = (box.value ? box.value + " " : "") + transcript;
+        document.getElementById("statusText").textContent = "✅ Aawaz likh di gayi hai!";
       };
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        document.getElementById('aiPrompt').value = transcript;
-        statusText.innerText = '✅ "' + transcript + '"';
-        setTimeout(() => processAICommand(), 500);
-      };
-
-      recognition.onerror = () => {
-        micBtn.classList.remove('listening');
-        statusText.innerText = '⚠️ Could not hear clearly. Tap mic again.';
-      };
-
       recognition.onend = () => {
-        micBtn.classList.remove('listening');
-        setTimeout(() => { statusBox.style.display = 'none'; }, 3000);
+        micBtn.classList.remove("listening");
+        recognition = null;
       };
-
       recognition.start();
     }
 
-    async function processAICommand() {
-      const promptInput = document.getElementById('aiPrompt');
-      const rawPrompt = promptInput.value.trim();
-      if (!rawPrompt) return;
-
-      const userCustomKey = localStorage.getItem('gemini_api_key');
-
-      if (!userCustomKey && userCoins < 5) {
-        openCoinModal();
+    // Generate App via Cloudflare Worker
+    async function generateApp() {
+      const prompt = document.getElementById("promptInput").value.trim();
+      if (!prompt) {
+        alert("Pehle likhein ya bolkar batayein ki kaisa app banana hai!");
         return;
       }
 
-      const area = document.getElementById('codeArea');
-      const statusBox = document.getElementById('aiStatus');
-      const statusText = document.getElementById('aiStatusText');
+      if (!isVipActive() && coins < APP_COST) {
+        openStoreModal("Aapke coins khatam ho gaye hain! Agla app banane ke liye 1 Video Ad dekhein (+10 Coins) ya ₹499/Year VIP lein.");
+        return;
+      }
 
-      statusBox.style.display = 'flex';
-      statusText.innerText = '🤖 AI is building your app...';
+      const buildBtn = document.getElementById("buildBtn");
+      const statusText = document.getElementById("statusText");
+      buildBtn.disabled = true;
+      buildBtn.textContent = "⏳ App Ban Raha Hai...";
+      statusText.textContent = "AI aapka multi-tab app taiyar kar raha hai (10-15 sec)...";
 
       try {
-        let data;
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `Build a complete, mobile-responsive single-file HTML5 app with embedded CSS and JS for: ${prompt}. Make it polished, modern dark/light UI, multi-tab if needed, and fully working without external dependencies. Return ONLY raw HTML starting with <!DOCTYPE html>.`
+          })
+        });
 
-        if (userCustomKey) {
-          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${userCustomKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [{
-                  text: `You are an expert mobile app developer. Modify or create a complete, single-file responsive HTML/CSS/JS mobile app based on this user request: "${rawPrompt}". Current code:\n${area.value}\nReturn ONLY raw valid HTML code without markdown backticks.`
-                }]
-              }]
-            })
-          });
-          data = await response.json();
-        } else {
-          const response = await fetch(CLOUDFLARE_WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt: rawPrompt,
-              currentCode: area.value
-            })
-          });
-          data = await response.json();
+        const data = await res.json();
+        let html = data.html || data.code || data.result || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
+        html = html.replace(/```html/gi, "").replace(/```/g, "").trim();
+
+        if (!html || !html.includes("<")) {
+          throw new Error(data.error || "Invalid response from AI server");
         }
 
-        if (data.candidates && data.candidates[0]) {
-          if (!userCustomKey) {
-            userCoins -= 5;
-            localStorage.setItem('appmaker_coins', userCoins);
-            updateCoinUI();
-          }
-          let aiCode = data.candidates[0].content.parts[0].text;
-          aiCode = aiCode.replace(/```html/g, '').replace(/```/g, '').trim();
-          area.value = aiCode;
-          onCodeChange();
-          switchTab('preview');
-          promptInput.value = '';
-          statusText.innerText = '✅ App built successfully!';
-          setTimeout(() => { statusBox.style.display = 'none'; }, 2500);
-          return;
-        } else if (data.error) {
-          throw new Error(data.error.message || JSON.stringify(data.error));
-        } else {
-          throw new Error('Empty response from server');
+        if (!isVipActive()) {
+          coins = Math.max(0, coins - APP_COST);
+          localStorage.setItem("appmaker_coins", String(coins));
         }
+
+        document.getElementById("codeBox").value = html;
+        document.getElementById("previewFrame").srcdoc = html;
+        updateUI();
+        statusText.textContent = "✅ App taiyar hai!";
+        switchTab("preview");
       } catch (err) {
-        statusText.innerText = '⚠️ ' + err.message;
-        setTimeout(() => { statusBox.style.display = 'none'; }, 6000);
+        statusText.textContent = "❌ Error: " + err.message;
+      } finally {
+        buildBtn.disabled = false;
+        updateUI();
       }
     }
+
+    function applyManualCode() {
+      const html = document.getElementById("codeBox").value;
+      document.getElementById("previewFrame").srcdoc = html;
+      switchTab("preview");
+    }
+
+    function saveCurrentProject() {
+      const html = document.getElementById("codeBox").value;
+      if (!html) return alert("Pehle koi app banayein!");
+      const title = document.getElementById("promptInput").value.slice(0, 32) || "My AI App";
+      projects.unshift({ id: Date.now(), title, html });
+      localStorage.setItem("appmaker_projects", JSON.stringify(projects));
+      renderProjects();
+      alert("✅ App save ho gaya!");
+    }
+
+    function renderProjects() {
+      const list = document.getElementById("projectsList");
+      if (!projects.length) {
+        list.innerHTML = "Abhi koi app save nahi hai.";
+        return;
+      }
+      list.innerHTML = projects.map(p => `
+        <div class="project-item">
+          <span>📱 ${p.title}</span>
+          <button class="btn btn-secondary" onclick="loadProject(${p.id})">Open</button>
+        </div>
+      `).join("");
+    }
+
+    function loadProject(id) {
+      const p = projects.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById("codeBox").value = p.html;
+      document.getElementById("previewFrame").srcdoc = p.html;
+      switchTab("preview");
+    }
+
+    // VIP Export Feature
+    function exportHtmlCode() {
+      if (!isVipActive()) {
+        openStoreModal("📦 HTML Source Code Download sirf ₹499/Year VIP users ke liye unlocked hai!");
+        return;
+      }
+      const html = document.getElementById("codeBox").value;
+      if (!html) return alert("Pehle koi app banayein!");
+      const blob = new Blob([html], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "AppMaker_Project.html";
+      a.click();
+    }
+
+    // Store, Rewarded Ad & ₹499 Annual VIP
+    function openStoreModal(msg) {
+      if (msg) document.getElementById("modalSubtext").textContent = msg;
+      document.getElementById("storeModal").classList.remove("hidden");
+    }
+
+    function closeStoreModal() {
+      document.getElementById("storeModal").classList.add("hidden");
+    }
+
+    function watchRewardedAd() {
+      const btn = document.getElementById("watchAdBtn");
+      btn.disabled = true;
+      let sec = 5;
+      btn.textContent = `⏳ Ad chal raha hai (${sec}s)...`;
+      // Trigger native Android AdMob bridge if wrapped in APK
+      if (window.AndroidAdMob && window.AndroidAdMob.showRewardedAd) {
+        window.AndroidAdMob.showRewardedAd();
+      }
+      const timer = setInterval(() => {
+        sec--;
+        if (sec > 0) {
+          btn.textContent = `⏳ Ad chal raha hai (${sec}s)...`;
+        } else {
+          clearInterval(timer);
+          coins += 10;
+          localStorage.setItem("appmaker_coins", String(coins));
+          btn.disabled = false;
+          btn.textContent = "🎬 Watch Video Ad (+10 Coins Free)";
+          updateUI();
+          closeStoreModal();
+          alert("🎉 Badhai ho! Aapko +10 Coins mil gaye hain. Ab aap naya app bana sakte hain!");
+        }
+      }, 1000);
+    }
+
+    function activateAnnualVip() {
+      // Trigger Google Play Billing bridge when wrapped in Play Store AAB
+      if (window.AndroidBilling && window.AndroidBilling.purchaseAnnualVip) {
+        window.AndroidBilling.purchaseAnnualVip("vip_annual_499");
+        return;
+      }
+      // Demo / Web test activation (365 days)
+      if (confirm("₹499 / Year VIP Plan activate karein? (365 din Ad-Free + Unlimited Builds + HTML Export)")) {
+        vipExpiry = Date.now() + YEAR_MS;
+        localStorage.setItem("appmaker_vip_expiry", String(vipExpiry));
+        updateUI();
+        closeStoreModal();
+        alert("👑 VIP Activated! Aapka account 1 saal (365 din) ke liye Ad-Free ho gaya hai.");
+      }
+    }
+
+    updateUI();
   </script>
 </body>
 </html>
