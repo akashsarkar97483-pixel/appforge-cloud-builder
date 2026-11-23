@@ -77,10 +77,10 @@
     main {
       flex: 1;
       overflow-y: auto;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .card {
       background: #1e293b;
@@ -88,7 +88,7 @@
       border-radius: 14px;
       padding: 12px;
     }
-    .row { display: flex; gap: 8px; align-items: center; }
+    .row { display: flex; gap: 6px; align-items: center; }
     select, input, textarea {
       width: 100%;
       background: #0f172a;
@@ -99,30 +99,31 @@
       font-size: 14px;
       font-family: inherit;
     }
-    textarea { min-height: 92px; resize: vertical; }
+    textarea { min-height: 86px; resize: vertical; }
     .btn {
       border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      padding: 10px 12px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
     }
-    .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; width: 100%; }
-    .btn-mic { background: #ef4444; color: white; flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; font-size: 18px; }
+    .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; width: 100%; padding: 12px; font-size: 14px; }
+    .btn-mic { background: #ef4444; color: white; flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; font-size: 18px; }
     .btn-mic.listening { animation: pulse 1s infinite; background: #dc2626; }
     .btn-secondary { background: #334155; color: #e2e8f0; font-size: 12px; padding: 8px 10px; }
     .btn-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 12px; padding: 8px 10px; }
-    .btn-export { background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 12px; padding: 8px 12px; }
+    .btn-export { background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 12px; padding: 8px 10px; }
+    .btn-ai-edit { background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; font-size: 12px; padding: 9px 12px; flex-shrink: 0; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
     #previewFrame {
       width: 100%;
-      height: 100%;
-      min-height: 360px;
+      flex: 1;
+      min-height: 280px;
       border: none;
       border-radius: 12px;
       background: #ffffff;
@@ -155,6 +156,55 @@
       white-space: nowrap;
       color: #f8fafc;
       font-weight: 600;
+    }
+    .tpl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .tpl-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .tpl-card:active { border-color: #818cf8; }
+    .tpl-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 2px 6px;
+      border-radius: 6px;
+      align-self: flex-start;
+    }
+    /* Fullscreen Preview Overlay */
+    #fullscreenOverlay {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+    .fs-bar {
+      background: #1e293b;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+    #fullscreenFrame {
+      width: 100%;
+      flex: 1;
+      border: none;
+      background: #ffffff;
     }
     /* Always-on Bottom Banner Ad for Free Users */
     #bottomBannerAd {
@@ -228,7 +278,7 @@
 
   <main>
     <!-- BUILD TAB -->
-    <section id="viewBuild">
+    <section id="viewBuild" style="display: flex; flex-direction: column; gap: 10px;">
       <div class="card">
         <div class="row" style="margin-bottom: 10px;">
           <select id="langSelect">
@@ -247,32 +297,46 @@
             <option value="fr-FR">🇫🇷 French</option>
             <option value="ar-SA">🇸🇦 Arabic</option>
           </select>
-          <button id="micBtn" class="btn btn-mic" onclick="toggleVoice()" title="Speak App Idea">🎙️</button>
+          <button id="micBtn" class="btn btn-mic" onclick="toggleVoice('promptInput', 'micBtn')" title="Speak App Idea">🎙️</button>
         </div>
         <textarea id="promptInput" placeholder="Bolkar ya likhkar batayein kaisa app banana hai... (Jaise: Ek multi-tab Hisab-Kitab aur Bill Calculator app banao)"></textarea>
         <div style="margin-top: 10px;">
           <button id="buildBtn" class="btn btn-primary" onclick="generateApp()">⚡ Build App (10 🪙)</button>
         </div>
-        <p id="statusText" class="status" style="margin-top: 8px;">Ready! Pehla app 10 free coins se banayein.</p>
+        <p id="statusText" class="status" style="margin-top: 8px; margin-bottom: 0;">Ready! Pehla app 10 free coins se banayein.</p>
       </div>
 
+      <!-- READY TEMPLATES (Watch Ad to Unlock for Free Users, Instant for VIP) -->
       <div class="card">
-        <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #94a3b8;">⚡ Quick Ideas (1-Tap)</div>
-        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-          <button class="btn btn-secondary" onclick="setIdea('Ek multi-tab Dukan Hisab-Kitab, Udhar Khata aur GST Calculator app banao')">📒 Dukan Khata App</button>
-          <button class="btn btn-secondary" onclick="setIdea('Ek Snake aur Ludo style arcade game app banao high score ke saath')">🎮 Arcade Game</button>
-          <button class="btn btn-secondary" onclick="setIdea('Ek Daily Expense Tracker, Budget Planner aur EMI Calculator app banao')">💰 Expense & EMI</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 13px; font-weight: 700; color: #e2e8f0;">📚 Ready Templates</span>
+          <span id="tplHint" style="font-size: 11px; color: #fbbf24;">🎬 Watch Ad to Unlock</span>
         </div>
+        <div class="tpl-grid" id="templatesGrid"></div>
       </div>
     </section>
 
     <!-- PREVIEW TAB -->
     <section id="viewPreview" class="hidden" style="height: 100%; display: flex; flex-direction: column; gap: 8px;">
-      <div class="row" style="justify-content: space-between;">
-        <button class="btn btn-secondary" onclick="saveCurrentProject()">💾 Save App</button>
-        <button class="btn btn-export" onclick="exportHtmlCode()">📦 Export HTML (VIP)</button>
+      <div class="row" style="justify-content: space-between; flex-wrap: wrap;">
+        <div class="row">
+          <button class="btn btn-secondary" onclick="saveCurrentProject()">💾 Save</button>
+          <button class="btn btn-secondary" onclick="openFullscreen()">⛶ Full Screen</button>
+          <button class="btn btn-secondary" onclick="shareCurrentApp()">📤 Share</button>
+        </div>
+        <button class="btn btn-export" onclick="exportHtmlCode()">📦 Export (VIP)</button>
       </div>
+
       <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-modals"></iframe>
+
+      <!-- EDIT WITH AI BAR -->
+      <div class="card" style="padding: 8px;">
+        <div class="row">
+          <button id="editMicBtn" class="btn btn-mic" style="width: 38px; height: 38px; font-size: 15px;" onclick="toggleVoice('editInput', 'editMicBtn')" title="Speak Changes">🎙️</button>
+          <input id="editInput" type="text" placeholder="AI se badlav karwayein (jaise: rang neela kar do)..." style="padding: 8px 10px; font-size: 13px;" />
+          <button id="editAiBtn" class="btn btn-ai-edit" onclick="refineAppWithAI()">✨ Edit (5 🪙)</button>
+        </div>
+      </div>
     </section>
 
     <!-- CODE TAB -->
@@ -292,6 +356,18 @@
       </div>
     </section>
   </main>
+
+  <!-- FULLSCREEN PREVIEW OVERLAY -->
+  <div id="fullscreenOverlay" class="hidden">
+    <div class="fs-bar">
+      <span style="font-weight: 700; font-size: 14px;">📱 Full-Screen App Preview</span>
+      <div class="row">
+        <button class="btn btn-secondary" onclick="shareCurrentApp()">📤 Share</button>
+        <button class="btn btn-danger" onclick="closeFullscreen()">✖ Close</button>
+      </div>
+    </div>
+    <iframe id="fullscreenFrame" sandbox="allow-scripts allow-forms allow-modals"></iframe>
+  </div>
 
   <!-- ALWAYS-ON BOTTOM BANNER AD (Hidden automatically for ₹499 Annual VIP) -->
   <div id="bottomBannerAd">
@@ -313,9 +389,9 @@
 
       <div class="vip-perks">
         <div>🚫 <strong>100% Ad-Free:</strong> Neeche ka Banner aur Video Ads band</div>
-        <div>♾️ <strong>Unlimited App Builds:</strong> Bina coin tension ke apps banayein</div>
+        <div>♾️ <strong>Unlimited Builds & AI Edits:</strong> Bina coin tension ke apps banayein</div>
+        <div>📚 <strong>All Ready Templates Unlocked:</strong> Bina Ad ke turant kholein</div>
         <div>📦 <strong>Export HTML Code:</strong> Apne apps ka code download karein</div>
-        <div>📅 <strong>1 Year Validity:</strong> Poore 365 din ke liye valid</div>
       </div>
 
       <button class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; margin-bottom: 10px;" onclick="activateAnnualVip()">
@@ -333,11 +409,41 @@
   <script>
     const WORKER_URL = "https://appforge-proxy.sarkar97483.workers.dev";
     const APP_COST = 10;
+    const EDIT_COST = 5;
     const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
     let coins = parseInt(localStorage.getItem("appmaker_coins") ?? "10", 10);
     let vipExpiry = parseInt(localStorage.getItem("appmaker_vip_expiry") ?? "0", 10);
     let projects = JSON.parse(localStorage.getItem("appmaker_projects") || "[]");
+    let pendingTemplateIndex = null;
+
+    // Built-in Ready Templates (Instant load after Ad or VIP)
+    const READY_TEMPLATES = [
+      {
+        icon: "📒",
+        name: "Dukan GST & Udhar Khata",
+        desc: "Bill calculator + customer balance",
+        html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:sans-serif;background:#0f172a;color:#fff;padding:16px;margin:0}h2{color:#38bdf8;margin-top:0}.card{background:#1e293b;padding:14px;border-radius:12px;margin-bottom:12px}input,select,button{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;box-sizing:border-box}button{background:#2563eb;border:none;font-weight:bold;cursor:pointer}.item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #334155}</style></head><body><h2>📒 Dukan GST & Khata</h2><div class="card"><h3>🧾 Quick GST Bill</h3><input id="amt" type="number" placeholder="Amount (₹)"><select id="gst"><option value="5">GST 5%</option><option value="12">GST 12%</option><option value="18" selected>GST 18%</option><option value="28">GST 28%</option></select><button onclick="calc()">Calculate Total</button><h3 id="res" style="color:#4ade80">Total: ₹0</h3></div><div class="card"><h3>👥 Udhar Khata</h3><input id="cname" placeholder="Customer Name"><input id="camt" type="number" placeholder="Udhar Amount (₹)"><button style="background:#10b981" onclick="addK()">+ Add Entry</button><div id="list"></div></div><script>let k=JSON.parse(localStorage.getItem('dk_k')||'[]');function calc(){let a=+document.getElementById('amt').value||0,g=+document.getElementById('gst').value;let t=a+(a*g/100);document.getElementById('res').innerText='Total: ₹'+t.toFixed(2)+' (GST: ₹'+(a*g/100).toFixed(2)+')'}function addK(){let n=document.getElementById('cname').value,a=document.getElementById('camt').value;if(!n||!a)return;k.unshift({n,a});localStorage.setItem('dk_k',JSON.stringify(k));render()}function render(){document.getElementById('list').innerHTML=k.map((x,i)=>'<div class="item"><span>'+x.n+'</span><b>₹'+x.a+'</b></div>').join('')}render()<\/script></body></html>`
+      },
+      {
+        icon: "💰",
+        name: "EMI & Loan Calculator",
+        desc: "Monthly EMI & total interest",
+        html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:sans-serif;background:#111827;color:#f9fafb;padding:16px;margin:0}h2{color:#fbbf24}.box{background:#1f2937;padding:16px;border-radius:14px}input,button{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #374151;background:#111827;color:#fff;box-sizing:border-box;font-size:15px}button{background:#f59e0b;color:#000;font-weight:bold;border:none}.stat{background:#111827;padding:12px;border-radius:10px;margin-top:10px;display:flex;justify-content:space-between}</style></head><body><h2>💰 EMI & Loan Calculator</h2><div class="box"><input id="p" type="number" placeholder="Loan Amount (₹) e.g. 100000"><input id="r" type="number" placeholder="Interest Rate (% per year) e.g. 10"><input id="m" type="number" placeholder="Tenure (Months) e.g. 12"><button onclick="emi()">Calculate EMI</button><div class="stat"><span>Monthly EMI:</span><b id="e" style="color:#34d399">₹0</b></div><div class="stat"><span>Total Interest:</span><b id="ti" style="color:#f87171">₹0</b></div><div class="stat"><span>Total Payment:</span><b id="tp">₹0</b></div></div><script>function emi(){let P=+p.value,R=(+r.value)/12/100,N=+m.value;if(!P||!R||!N)return;let E=(P*R*Math.pow(1+R,N))/(Math.pow(1+R,N)-1);let T=E*N;e.innerText='₹'+E.toFixed(0);ti.innerText='₹'+(T-P).toFixed(0);tp.innerText='₹'+T.toFixed(0)}<\/script></body></html>`
+      },
+      {
+        icon: "🎮",
+        name: "Speed Tap Arcade Game",
+        desc: "30-sec reflex high-score game",
+        html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:sans-serif;background:#090d16;color:#fff;text-align:center;margin:0;padding:16px;user-select:none}#arena{position:relative;width:100%;height:320px;background:#1e293b;border-radius:16px;overflow:hidden;margin:14px 0}#target{position:absolute;width:54px;height:54px;border-radius:50%;background:radial-gradient(#fde047,#ef4444);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:0.1s}button{padding:12px 24px;border-radius:12px;border:none;background:#8b5cf6;color:#fff;font-weight:bold;font-size:16px}</style></head><body><h2>⚡ Speed Tap Arcade</h2><div>Score: <b id="sc">0</b> | Time: <b id="tm">30</b>s | Best: <b id="hi">0</b></div><div id="arena"><div id="target" onclick="hit()">🔥</div></div><button onclick="start()">▶ Start Game</button><script>let s=0,t=30,iv,best=+localStorage.getItem('tap_hi')||0;hi.innerText=best;function move(){target.style.left=Math.random()*80+'%';target.style.top=Math.random()*80+'%'}function hit(){if(t<=0)return;s++;sc.innerText=s;move()}function start(){clearInterval(iv);s=0;t=30;sc.innerText=0;tm.innerText=30;move();iv=setInterval(()=>{t--;tm.innerText=t;if(t<=0){clearInterval(iv);if(s>best){best=s;localStorage.setItem('tap_hi',best);hi.innerText=best}alert('Game Over! Score: '+s)}},1000)}<\/script></body></html>`
+      },
+      {
+        icon: "✅",
+        name: "Smart Daily To-Do & Notes",
+        desc: "Task checklist with auto-save",
+        html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:sans-serif;background:#0f172a;color:#f8fafc;padding:16px;margin:0}h2{color:#a78bfa}.row{display:flex;gap:8px}input{flex:1;padding:12px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#fff}button{padding:12px 16px;border-radius:10px;border:none;background:#7c3aed;color:#fff;font-weight:bold}.task{display:flex;justify-content:space-between;align-items:center;background:#1e293b;padding:12px;border-radius:10px;margin-top:8px}.done{text-decoration:line-through;opacity:0.5}</style></head><body><h2>✅ Daily Tasks</h2><div class="row"><input id="inp" placeholder="Naya kaam likhein..."><button onclick="add()">Add</button></div><div id="list"></div><script>let ts=JSON.parse(localStorage.getItem('todo_ai')||'[]');function add(){if(!inp.value.trim())return;ts.unshift({t:inp.value,d:false});inp.value='';save()}function tog(i){ts[i].d=!ts[i].d;save()}function del(i){ts.splice(i,1);save()}function save(){localStorage.setItem('todo_ai',JSON.stringify(ts));render()}function render(){list.innerHTML=ts.map((x,i)=>'<div class="task"><span class="'+(x.d?'done':'')+'" onclick="tog('+i+')">'+x.t+'</span><button style="background:#ef4444;padding:6px 10px" onclick="del('+i+')">✖</button></div>').join('')}render()<\/script></body></html>`
+      }
+    ];
 
     function isVipActive() {
       return Date.now() < vipExpiry;
@@ -349,6 +455,8 @@
       const vipBtn = document.getElementById("vipBtn");
       const bannerAd = document.getElementById("bottomBannerAd");
       const buildBtn = document.getElementById("buildBtn");
+      const editAiBtn = document.getElementById("editAiBtn");
+      const tplHint = document.getElementById("tplHint");
 
       if (vip) {
         const daysLeft = Math.ceil((vipExpiry - Date.now()) / (24 * 60 * 60 * 1000));
@@ -357,14 +465,50 @@
         vipBtn.classList.add("active");
         bannerAd.classList.add("hidden");
         buildBtn.textContent = "⚡ Build App (VIP Free)";
+        editAiBtn.textContent = "✨ Edit (VIP)";
+        tplHint.textContent = "👑 VIP Unlocked";
       } else {
         coinBtn.textContent = `🪙 ${coins} Coins`;
         vipBtn.textContent = "👑 Go VIP ₹499";
         vipBtn.classList.remove("active");
         bannerAd.classList.remove("hidden");
         buildBtn.textContent = `⚡ Build App (${APP_COST} 🪙)`;
+        editAiBtn.textContent = `✨ Edit (${EDIT_COST} 🪙)`;
+        tplHint.textContent = "🎬 Watch Ad to Unlock";
       }
+      renderTemplates();
       renderProjects();
+    }
+
+    function renderTemplates() {
+      const grid = document.getElementById("templatesGrid");
+      const vip = isVipActive();
+      grid.innerHTML = READY_TEMPLATES.map((t, i) => `
+        <div class="tpl-card" onclick="selectTemplate(${i})">
+          <div style="font-size: 20px;">${t.icon}</div>
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc;">${t.name}</div>
+          <div style="font-size: 11px; color: #94a3b8;">${t.desc}</div>
+          <span class="tpl-badge">${vip ? "✅ Instant Open" : "🎬 Watch Ad"}</span>
+        </div>
+      `).join("");
+    }
+
+    function selectTemplate(index) {
+      if (isVipActive()) {
+        loadTemplateNow(index);
+        return;
+      }
+      pendingTemplateIndex = index;
+      openStoreModal(`🎬 "${READY_TEMPLATES[index].name}" template kholne ke liye 1 chhota Video Ad dekhein (saath mein +10 Coins bhi milenge!) ya VIP banein.`);
+    }
+
+    function loadTemplateNow(index) {
+      const tpl = READY_TEMPLATES[index];
+      if (!tpl) return;
+      document.getElementById("promptInput").value = tpl.name;
+      document.getElementById("codeBox").value = tpl.html;
+      document.getElementById("previewFrame").srcdoc = tpl.html;
+      switchTab("preview");
     }
 
     function switchTab(tab) {
@@ -374,19 +518,15 @@
       });
     }
 
-    function setIdea(text) {
-      document.getElementById("promptInput").value = text;
-    }
-
-    // Voice Input
+    // Voice Input (Works for both Build prompt & Edit with AI bar)
     let recognition = null;
-    function toggleVoice() {
+    function toggleVoice(targetInputId, btnId) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
         alert("Aapke browser mein voice typing support nahi hai.");
         return;
       }
-      const micBtn = document.getElementById("micBtn");
+      const micBtn = document.getElementById(btnId);
       if (recognition) {
         recognition.stop();
         recognition = null;
@@ -397,13 +537,17 @@
       recognition.lang = document.getElementById("langSelect").value;
       recognition.interimResults = false;
       micBtn.classList.add("listening");
-      document.getElementById("statusText").textContent = "🎙️ Sun raha hoon... Boliye!";
+      if (targetInputId === "promptInput") {
+        document.getElementById("statusText").textContent = "🎙️ Sun raha hoon... Boliye!";
+      }
 
       recognition.onresult = (e) => {
         const transcript = e.results[0][0].transcript;
-        const box = document.getElementById("promptInput");
+        const box = document.getElementById(targetInputId);
         box.value = (box.value ? box.value + " " : "") + transcript;
-        document.getElementById("statusText").textContent = "✅ Aawaz likh di gayi hai!";
+        if (targetInputId === "promptInput") {
+          document.getElementById("statusText").textContent = "✅ Aawaz likh di gayi hai!";
+        }
       };
       recognition.onend = () => {
         micBtn.classList.remove("listening");
@@ -412,7 +556,7 @@
       recognition.start();
     }
 
-    // Generate App via Cloudflare Worker
+    // Generate New App via Cloudflare Worker
     async function generateApp() {
       const prompt = document.getElementById("promptInput").value.trim();
       if (!prompt) {
@@ -421,6 +565,7 @@
       }
 
       if (!isVipActive() && coins < APP_COST) {
+        pendingTemplateIndex = null;
         openStoreModal("Aapke coins khatam ho gaye hain! Agla app banane ke liye 1 Video Ad dekhein (+10 Coins) ya ₹499/Year VIP lein.");
         return;
       }
@@ -464,6 +609,102 @@
         buildBtn.disabled = false;
         updateUI();
       }
+    }
+
+    // Refine / Edit Existing App with AI
+    async function refineAppWithAI() {
+      const currentHtml = document.getElementById("codeBox").value.trim();
+      const changeReq = document.getElementById("editInput").value.trim();
+      if (!currentHtml) return alert("Pehle koi app banayein ya template kholein!");
+      if (!changeReq) return alert("Likhein ya bolkar batayein ki app mein kya badlav karna hai!");
+
+      if (!isVipActive() && coins < EDIT_COST) {
+        pendingTemplateIndex = null;
+        openStoreModal(`AI Edit ke liye ${EDIT_COST} Coins chahiye! 1 Video Ad dekhein (+10 Coins) ya VIP lein.`);
+        return;
+      }
+
+      const editBtn = document.getElementById("editAiBtn");
+      editBtn.disabled = true;
+      editBtn.textContent = "⏳ Updating...";
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: `Update the following existing single-file HTML5 app according to this request: "${changeReq}". Keep all existing working features intact and apply the requested modification cleanly. Return ONLY raw updated HTML starting with <!DOCTYPE html>.\n\nExisting HTML:\n${currentHtml}`
+          })
+        });
+
+        const data = await res.json();
+        let html = data.html || data.code || data.result || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
+        html = html.replace(/```html/gi, "").replace(/```/g, "").trim();
+
+        if (!html || !html.includes("<")) {
+          throw new Error(data.error || "AI update failed");
+        }
+
+        if (!isVipActive()) {
+          coins = Math.max(0, coins - EDIT_COST);
+          localStorage.setItem("appmaker_coins", String(coins));
+        }
+
+        document.getElementById("codeBox").value = html;
+        document.getElementById("previewFrame").srcdoc = html;
+        document.getElementById("editInput").value = "";
+        updateUI();
+        alert("✅ App update ho gaya hai!");
+      } catch (err) {
+        alert("❌ Error: " + err.message);
+      } finally {
+        editBtn.disabled = false;
+        updateUI();
+      }
+    }
+
+    // Fullscreen Preview
+    function openFullscreen() {
+      const html = document.getElementById("codeBox").value;
+      if (!html) return alert("Pehle koi app banayein ya template kholein!");
+      document.getElementById("fullscreenFrame").srcdoc = html;
+      document.getElementById("fullscreenOverlay").classList.remove("hidden");
+    }
+
+    function closeFullscreen() {
+      document.getElementById("fullscreenOverlay").classList.add("hidden");
+    }
+
+    // 1-Tap Share App (WhatsApp / Native Share Sheet)
+    async function shareCurrentApp() {
+      const html = document.getElementById("codeBox").value;
+      if (!html) return alert("Pehle koi app banayein!");
+      const title = document.getElementById("promptInput").value.trim().slice(0, 30) || "AppMaker AI App";
+      const file = new File([html], `${title.replace(/\s+/g, "_")}.html`, { type: "text/html" });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: title,
+            text: `🚀 Dekho maine AppMaker AI se yeh app banaya hai: ${title}`,
+            files: [file]
+          });
+          return;
+        } catch (e) {}
+      }
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "AppMaker AI",
+            text: `🚀 Maine AppMaker AI se "${title}" app banaya hai! Aap bhi try karein:\nhttps://akashsarkar97483-pixel.github.io/appforge-cloud-builder/`
+          });
+          return;
+        } catch (e) {}
+      }
+
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(`🚀 Maine AppMaker AI se "${title}" app banaya hai! Try karein: https://akashsarkar97483-pixel.github.io/appforge-cloud-builder/`)}`;
+      window.open(waUrl, "_blank");
     }
 
     function applyManualCode() {
@@ -523,6 +764,7 @@
     // VIP Export Feature
     function exportHtmlCode() {
       if (!isVipActive()) {
+        pendingTemplateIndex = null;
         openStoreModal("📦 HTML Source Code Download sirf ₹499/Year VIP users ke liye unlocked hai!");
         return;
       }
@@ -542,6 +784,7 @@
     }
 
     function closeStoreModal() {
+      pendingTemplateIndex = null;
       document.getElementById("storeModal").classList.add("hidden");
     }
 
@@ -563,9 +806,15 @@
           localStorage.setItem("appmaker_coins", String(coins));
           btn.disabled = false;
           btn.textContent = "🎬 Watch Video Ad (+10 Coins Free)";
+          const unlockedTpl = pendingTemplateIndex;
           updateUI();
           closeStoreModal();
-          alert("🎉 Badhai ho! Aapko +10 Coins mil gaye hain. Ab aap naya app bana sakte hain!");
+          if (unlockedTpl !== null) {
+            loadTemplateNow(unlockedTpl);
+            alert("🎉 Template unlock ho gaya aur +10 Coins bhi mil gaye!");
+          } else {
+            alert("🎉 Badhai ho! Aapko +10 Coins mil gaye hain.");
+          }
         }
       }, 1000);
     }
@@ -575,11 +824,13 @@
         window.AndroidBilling.purchaseAnnualVip("vip_annual_499");
         return;
       }
-      if (confirm("₹499 / Year VIP Plan activate karein? (365 din Ad-Free + Unlimited Builds + HTML Export)")) {
+      if (confirm("₹499 / Year VIP Plan activate karein? (365 din Ad-Free + Unlimited Builds + All Templates + HTML Export)")) {
         vipExpiry = Date.now() + YEAR_MS;
         localStorage.setItem("appmaker_vip_expiry", String(vipExpiry));
+        const unlockedTpl = pendingTemplateIndex;
         updateUI();
         closeStoreModal();
+        if (unlockedTpl !== null) loadTemplateNow(unlockedTpl);
         alert("👑 VIP Activated! Aapka account 1 saal (365 din) ke liye Ad-Free ho gaya hai.");
       }
     }
