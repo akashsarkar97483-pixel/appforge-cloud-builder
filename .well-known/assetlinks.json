@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.akashsarkar97483_pixel.twa",
+        "sha256_cert_fingerprints": ["39:21:26:7A:60:99:D4:5C:E5:F5:3D:7B:4D:5A:50:E8:A7:B8:8F:65:9A:32:8F:D0:BB:BA:11:5D:6A:80:5E:6B"]
+      }
+    }]
