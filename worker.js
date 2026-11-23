@@ -46,7 +46,16 @@ export default {
         })
       });
 
-      const data = await res.json();
+      const rawText = await res.text();
+      let data = {};
+      try {
+        data = rawText ? JSON.parse(rawText) : {};
+      } catch {
+        return new Response(
+          JSON.stringify({ error: `Invalid JSON from Gemini (${res.status}): ${rawText.slice(0, 200)}` }),
+          { status: 502, headers: { ...cors, "Content-Type": "application/json" } }
+        );
+      }
 
       if (!res.ok) {
         return new Response(
@@ -70,7 +79,7 @@ export default {
       );
     } catch (e) {
       return new Response(
-        JSON.stringify({ error: e.message || "Worker error" }),
+        JSON.stringify({ error: e?.message || "Worker error" }),
         { status: 500, headers: { ...cors, "Content-Type": "application/json" } }
       );
     }
