@@ -407,7 +407,7 @@
   </div>
 
   <script>
-    const WORKER_URL = "https://appforge-proxy.sarkar97483.workers.dev";
+    const WORKER_URL = "https://appforge-proxy.akashsarkar97483.workers.dev";
     const APP_COST = 10;
     const EDIT_COST = 5;
     const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
@@ -586,7 +586,7 @@
         });
 
         const data = await res.json();
-        let html = data.html || data.code || data.result || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
+        let html = data.html || data.code || data.result || data.reply || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
         html = html.replace(/```html/gi, "").replace(/```/g, "").trim();
 
         if (!html || !html.includes("<")) {
@@ -638,7 +638,7 @@
         });
 
         const data = await res.json();
-        let html = data.html || data.code || data.result || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
+        let html = data.html || data.code || data.result || data.reply || (data.candidates?.[0]?.content?.parts?.[0]?.text) || "";
         html = html.replace(/```html/gi, "").replace(/```/g, "").trim();
 
         if (!html || !html.includes("<")) {
