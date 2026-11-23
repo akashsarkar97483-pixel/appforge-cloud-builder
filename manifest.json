@@ -1,10 +1,10 @@
 {
-  "id": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
+  "id": "https://akashsarkar97483-pixel.github.io/appforge-cloud-builder/",
   "name": "AppMaker AI",
   "short_name": "AppMaker AI",
   "description": "Create Android and web apps instantly using voice or text commands with AI.",
-  "start_url": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
-  "scope": "https://sarkar97483-pixel.github.io/appforge-cloud-builder/",
+  "start_url": "https://akashsarkar97483-pixel.github.io/appforge-cloud-builder/",
+  "scope": "https://akashsarkar97483-pixel.github.io/appforge-cloud-builder/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#4f46e5",
