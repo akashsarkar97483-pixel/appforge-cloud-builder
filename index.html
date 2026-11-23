@@ -116,6 +116,7 @@
     .btn-mic { background: #ef4444; color: white; flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; font-size: 18px; }
     .btn-mic.listening { animation: pulse 1s infinite; background: #dc2626; }
     .btn-secondary { background: #334155; color: #e2e8f0; font-size: 12px; padding: 8px 10px; }
+    .btn-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 12px; padding: 8px 10px; }
     .btn-export { background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 12px; padding: 8px 12px; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
     #previewFrame {
@@ -140,11 +141,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
       padding: 10px;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 10px;
       margin-top: 8px;
+    }
+    .project-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #f8fafc;
+      font-weight: 600;
     }
     /* Always-on Bottom Banner Ad for Free Users */
     #bottomBannerAd {
@@ -322,7 +332,7 @@
 
   <script>
     const WORKER_URL = "https://appforge-proxy.sarkar97483.workers.dev";
-    const APP_COST = 10; // 10 coins per app build
+    const APP_COST = 10;
     const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
     let coins = parseInt(localStorage.getItem("appmaker_coins") ?? "10", 10);
@@ -465,11 +475,21 @@
     function saveCurrentProject() {
       const html = document.getElementById("codeBox").value;
       if (!html) return alert("Pehle koi app banayein!");
-      const title = document.getElementById("promptInput").value.slice(0, 32) || "My AI App";
+      const defaultTitle = document.getElementById("promptInput").value.trim().slice(0, 32) || "My AI App";
+      const customTitle = prompt("Apne app ka naam likhein:", defaultTitle);
+      if (customTitle === null) return;
+      const title = customTitle.trim() || defaultTitle;
       projects.unshift({ id: Date.now(), title, html });
       localStorage.setItem("appmaker_projects", JSON.stringify(projects));
       renderProjects();
       alert("✅ App save ho gaya!");
+    }
+
+    function deleteProject(id) {
+      if (!confirm("Kya aap is saved app ko delete karna chahte hain?")) return;
+      projects = projects.filter(x => x.id !== id);
+      localStorage.setItem("appmaker_projects", JSON.stringify(projects));
+      renderProjects();
     }
 
     function renderProjects() {
@@ -478,12 +498,18 @@
         list.innerHTML = "Abhi koi app save nahi hai.";
         return;
       }
-      list.innerHTML = projects.map(p => `
-        <div class="project-item">
-          <span>📱 ${p.title}</span>
-          <button class="btn btn-secondary" onclick="loadProject(${p.id})">Open</button>
-        </div>
-      `).join("");
+      list.innerHTML = projects.map((p, idx) => {
+        const safeTitle = (p.title && p.title !== "undefined") ? p.title : (p.name || `Saved App #${idx + 1}`);
+        return `
+          <div class="project-item">
+            <span class="project-title">📱 ${safeTitle}</span>
+            <div class="row" style="gap: 6px;">
+              <button class="btn btn-secondary" onclick="loadProject(${p.id})">Open</button>
+              <button class="btn btn-danger" onclick="deleteProject(${p.id})">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     function loadProject(id) {
@@ -524,7 +550,6 @@
       btn.disabled = true;
       let sec = 5;
       btn.textContent = `⏳ Ad chal raha hai (${sec}s)...`;
-      // Trigger native Android AdMob bridge if wrapped in APK
       if (window.AndroidAdMob && window.AndroidAdMob.showRewardedAd) {
         window.AndroidAdMob.showRewardedAd();
       }
@@ -546,12 +571,10 @@
     }
 
     function activateAnnualVip() {
-      // Trigger Google Play Billing bridge when wrapped in Play Store AAB
       if (window.AndroidBilling && window.AndroidBilling.purchaseAnnualVip) {
         window.AndroidBilling.purchaseAnnualVip("vip_annual_499");
         return;
       }
-      // Demo / Web test activation (365 days)
       if (confirm("₹499 / Year VIP Plan activate karein? (365 din Ad-Free + Unlimited Builds + HTML Export)")) {
         vipExpiry = Date.now() + YEAR_MS;
         localStorage.setItem("appmaker_vip_expiry", String(vipExpiry));
