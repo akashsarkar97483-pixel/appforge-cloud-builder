@@ -1,4 +1,5 @@
 export default {
+  
   async fetch(request, env) {
     const cors = {
       "Access-Control-Allow-Origin": "*",
